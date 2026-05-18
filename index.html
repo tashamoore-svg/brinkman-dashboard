@@ -8,19 +8,17 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   :root {
-    /* ── Brinkman Brand Palette ── */
-    --forest:    #32462a;   /* deep forest green */
-    --sage:      #c1c19a;   /* warm sage */
-    --teal:      #829987;   /* muted teal green */
-    --silver:    #bbbcb7;   /* cool silver */
-    --cream:     #f3ebe2;   /* warm cream (background) */
-    --tan:       #bea17f;   /* warm tan/sand */
-    --blush:     #e6cfc7;   /* soft blush */
-    --terra:     #d6a58a;   /* terracotta */
-    --white:     #faf8f4;   /* off-white */
-    --olive:     #71695b;   /* warm olive/taupe */
+    --forest:    #32462a;
+    --sage:      #c1c19a;
+    --teal:      #829987;
+    --silver:    #bbbcb7;
+    --cream:     #f3ebe2;
+    --tan:       #bea17f;
+    --blush:     #e6cfc7;
+    --terra:     #d6a58a;
+    --white:     #faf8f4;
+    --olive:     #71695b;
 
-    /* ── UI Roles ── */
     --bg:          #f3ebe2;
     --bg-card:     #faf8f4;
     --bg-nav:      #32462a;
@@ -45,7 +43,6 @@
     min-height: 100vh;
   }
 
-  /* ─── HEADER ─── */
   header {
     background: var(--forest);
     padding: 0 36px;
@@ -57,108 +54,70 @@
     top: 0;
     z-index: 100;
   }
-  .logo-area {
-    display: flex;
-    align-items: baseline;
-    gap: 14px;
-  }
+  .logo-area { display: flex; align-items: baseline; gap: 14px; }
   .logo-area h1 {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 24px;
-    font-weight: 300;
-    color: var(--cream);
-    letter-spacing: 2px;
-    text-transform: uppercase;
+    font-size: 24px; font-weight: 300;
+    color: var(--cream); letter-spacing: 2px; text-transform: uppercase;
   }
-  .logo-area .divider {
-    width: 1px; height: 18px;
-    background: rgba(243,235,226,0.3);
-  }
-  .logo-area p {
-    font-size: 10px;
-    color: var(--sage);
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    font-weight: 400;
-  }
+  .logo-area .divider { width: 1px; height: 18px; background: rgba(243,235,226,0.3); }
+  .logo-area p { font-size: 10px; color: var(--sage); letter-spacing: 3px; text-transform: uppercase; font-weight: 400; }
   .date-badge {
     background: rgba(243,235,226,0.12);
     border: 1px solid rgba(243,235,226,0.2);
-    border-radius: 6px;
-    padding: 5px 14px;
-    font-size: 11px;
-    color: var(--sage);
-    letter-spacing: 1px;
+    border-radius: 6px; padding: 5px 14px;
+    font-size: 11px; color: var(--sage); letter-spacing: 1px;
   }
 
-  /* ─── NAV ─── */
   nav {
     background: var(--white);
     border-bottom: 1px solid var(--border);
     padding: 0 36px;
-    display: flex;
-    gap: 2px;
+    display: flex; gap: 2px;
   }
   .tab-btn {
-    background: none;
-    border: none;
+    background: none; border: none;
     color: var(--text-muted);
     font-family: 'Jost', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    padding: 15px 22px;
-    cursor: pointer;
+    font-size: 12px; font-weight: 500;
+    padding: 15px 22px; cursor: pointer;
     border-bottom: 2px solid transparent;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
+    letter-spacing: 1.5px; text-transform: uppercase;
     transition: all 0.2s;
   }
   .tab-btn:hover { color: var(--forest); }
   .tab-btn.active { color: var(--forest); border-bottom-color: var(--terra); }
 
-  /* ─── MAIN ─── */
   main { padding: 30px 36px; max-width: 1400px; margin: 0 auto; }
 
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
 
-  /* ─── SECTION HEADING ─── */
   .section-heading {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 20px;
-    font-weight: 400;
-    font-style: italic;
+    font-size: 20px; font-weight: 400; font-style: italic;
     color: var(--forest);
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border);
-    letter-spacing: 0.5px;
+    margin-bottom: 20px; padding-bottom: 10px;
+    border-bottom: 1px solid var(--border); letter-spacing: 0.5px;
   }
 
-  /* ─── KPI CARDS ─── */
   .kpi-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
-    gap: 14px;
-    margin-bottom: 26px;
+    gap: 14px; margin-bottom: 26px;
   }
   .kpi-card {
     background: var(--bg-card);
     border: 1px solid var(--border-card);
-    border-radius: 12px;
-    padding: 20px 22px;
-    position: relative;
-    overflow: hidden;
+    border-radius: 12px; padding: 20px 22px;
+    position: relative; overflow: hidden;
     transition: box-shadow 0.2s;
   }
   .kpi-card:hover { box-shadow: 0 4px 20px rgba(50,70,42,0.10); }
   .kpi-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 3px;
-    background: var(--teal);
-    border-radius: 0 0 12px 12px;
+    content: ''; position: absolute;
+    bottom: 0; left: 0; right: 0; height: 3px;
+    background: var(--teal); border-radius: 0 0 12px 12px;
   }
   .kpi-card.terra::after { background: var(--terra); }
   .kpi-card.tan::after   { background: var(--tan); }
@@ -169,94 +128,62 @@
   .kpi-value { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 300; color: var(--forest); line-height: 1; }
   .kpi-sub { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
   .kpi-badge {
-    display: inline-block;
-    padding: 2px 9px;
-    border-radius: 20px;
-    font-size: 10px;
-    font-weight: 600;
-    margin-top: 7px;
-    letter-spacing: 0.5px;
+    display: inline-block; padding: 2px 9px; border-radius: 20px;
+    font-size: 10px; font-weight: 600; margin-top: 7px; letter-spacing: 0.5px;
   }
   .kpi-badge.pos { background: rgba(130,153,135,0.18); color: var(--teal); }
   .kpi-badge.neg { background: rgba(214,165,138,0.25); color: #b06b45; }
   .kpi-badge.neu { background: rgba(190,161,127,0.2); color: var(--olive); }
 
-  /* ─── CHART CARDS ─── */
   .chart-grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-    margin-bottom: 22px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 18px; margin-bottom: 22px;
   }
   .chart-grid-3 {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 18px;
-    margin-bottom: 22px;
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 18px; margin-bottom: 22px;
   }
   .chart-card {
     background: var(--bg-card);
     border: 1px solid var(--border-card);
-    border-radius: 12px;
-    padding: 22px 24px;
+    border-radius: 12px; padding: 22px 24px;
     transition: box-shadow 0.2s;
   }
   .chart-card:hover { box-shadow: 0 4px 20px rgba(50,70,42,0.08); }
   .chart-card.full { grid-column: 1 / -1; }
   .chart-title {
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 18px;
+    font-size: 10px; font-weight: 600;
+    color: var(--text-muted); text-transform: uppercase;
+    letter-spacing: 2px; margin-bottom: 18px;
   }
 
-  /* ─── TABLE ─── */
   .table-card {
     background: var(--bg-card);
     border: 1px solid var(--border-card);
-    border-radius: 12px;
-    overflow: hidden;
-    margin-bottom: 22px;
+    border-radius: 12px; overflow: hidden; margin-bottom: 22px;
   }
   .table-card table { width: 100%; border-collapse: collapse; }
   .table-card th {
-    background: var(--forest);
-    color: var(--sage);
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    padding: 13px 18px;
-    text-align: left;
-    font-weight: 500;
-    font-family: 'Jost', sans-serif;
+    background: var(--forest); color: var(--sage);
+    font-size: 10px; text-transform: uppercase; letter-spacing: 2px;
+    padding: 13px 18px; text-align: left; font-weight: 500; font-family: 'Jost', sans-serif;
   }
   .table-card td {
-    padding: 12px 18px;
-    border-bottom: 1px solid rgba(50,70,42,0.06);
-    font-size: 13px;
-    color: var(--text-main);
+    padding: 12px 18px; border-bottom: 1px solid rgba(50,70,42,0.06);
+    font-size: 13px; color: var(--text-main);
   }
   .table-card tr:last-child td { border-bottom: none; }
   .table-card tr:hover td { background: rgba(130,153,135,0.06); }
 
-  /* pills */
   .pill {
-    display: inline-block;
-    padding: 2px 10px;
-    border-radius: 20px;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
+    display: inline-block; padding: 2px 10px; border-radius: 20px;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
   }
   .pill.buyer  { background: rgba(130,153,135,0.2); color: #4a7a56; }
   .pill.seller { background: rgba(190,161,127,0.25); color: #8a6840; }
   .pill.ab     { background: rgba(214,165,138,0.2); color: #9a5a38; }
   .pill.lm     { background: rgba(130,153,135,0.2); color: #4a7a56; }
 
-  /* ─── PROGRESS BARS ─── */
   .progress-wrap { margin-bottom: 0; }
   .progress-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
   .progress-label { font-size: 12px; color: var(--text-main); font-weight: 500; }
@@ -267,72 +194,68 @@
   .progress-bar-fill.warn  { background: var(--tan); }
   .progress-bar-fill.over  { background: var(--forest); }
 
-  /* ─── ACTIVITY ─── */
   .activity-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 14px;
-    margin-bottom: 24px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px; margin-bottom: 24px;
   }
   .activity-item {
-    background: var(--bg-card);
-    border: 1px solid var(--border-card);
-    border-radius: 10px;
-    padding: 16px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    background: var(--bg-card); border: 1px solid var(--border-card);
+    border-radius: 10px; padding: 16px 20px;
+    display: flex; flex-direction: column; gap: 8px;
   }
   .activity-pct { font-size: 10px; color: var(--text-light); text-align: right; margin-top: 3px; }
 
-  /* ─── AGENT CARDS ─── */
   .agent-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-    gap: 14px;
-    margin-bottom: 24px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 14px; margin-bottom: 24px;
   }
   .agent-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-card);
-    border-radius: 12px;
-    padding: 22px;
+    background: var(--bg-card); border: 1px solid var(--border-card);
+    border-radius: 12px; padding: 22px;
   }
   .agent-name {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 20px;
-    font-weight: 400;
-    color: var(--forest);
-    margin-bottom: 14px;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 10px;
+    font-size: 20px; font-weight: 400; color: var(--forest);
+    margin-bottom: 14px; border-bottom: 1px solid var(--border); padding-bottom: 10px;
   }
   .agent-stat { display: flex; justify-content: space-between; padding: 6px 0; }
   .agent-stat-label { color: var(--text-muted); font-size: 12px; }
   .agent-stat-val { font-weight: 600; font-size: 13px; color: var(--forest); }
 
-  /* ─── SOURCE GRID ─── */
   .source-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-    margin-bottom: 22px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 18px; margin-bottom: 22px;
   }
 
-  /* ─── FOOTER ─── */
+  /* Comparison tab styles */
+  .compare-header {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 18px; margin-bottom: 22px;
+  }
+  .compare-col-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px; font-weight: 400; font-style: italic;
+    color: var(--forest); text-align: center;
+    padding: 12px; border-radius: 8px;
+    margin-bottom: 0;
+  }
+  .compare-col-label.y2025 { background: rgba(130,153,135,0.12); border: 1px solid rgba(130,153,135,0.2); }
+  .compare-col-label.y2026 { background: rgba(190,161,127,0.12); border: 1px solid rgba(190,161,127,0.2); }
+
+  .compare-kpi-row {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 18px; margin-bottom: 14px;
+  }
+
   footer {
-    text-align: center;
-    padding: 28px;
-    color: var(--text-light);
-    font-size: 10px;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    border-top: 1px solid var(--border);
-    margin-top: 16px;
+    text-align: center; padding: 28px;
+    color: var(--text-light); font-size: 10px;
+    letter-spacing: 2.5px; text-transform: uppercase;
+    border-top: 1px solid var(--border); margin-top: 16px;
   }
 
   @media (max-width: 900px) {
-    .chart-grid-2, .chart-grid-3, .source-grid { grid-template-columns: 1fr; }
+    .chart-grid-2, .chart-grid-3, .source-grid, .compare-header, .compare-kpi-row { grid-template-columns: 1fr; }
     main { padding: 20px 16px; }
     header { padding: 0 16px; }
     nav { padding: 0 16px; overflow-x: auto; }
@@ -353,10 +276,11 @@
 
 <nav>
   <button class="tab-btn active" onclick="showTab('overview', this)">Overview</button>
-  <button class="tab-btn" onclick="showTab('production', this)">Production</button>
+  <button class="tab-btn" onclick="showTab('prod2025', this)">2025 Production</button>
+  <button class="tab-btn" onclick="showTab('prod2026', this)">2026 Production</button>
+  <button class="tab-btn" onclick="showTab('compare', this)">2025 vs 2026</button>
   <button class="tab-btn" onclick="showTab('referrals', this)">Referrals</button>
   <button class="tab-btn" onclick="showTab('activity', this)">Activity KPIs</button>
-  <button class="tab-btn" onclick="showTab('closings', this)">2026 Closings</button>
 </nav>
 
 <main>
@@ -419,21 +343,10 @@
       <canvas id="sourceDonut2026" height="240"></canvas>
     </div>
   </div>
-
-  <div class="chart-grid-2">
-    <div class="chart-card">
-      <div class="chart-title">2025 Sales Volume by Quarter</div>
-      <canvas id="volumeByQtr" height="220"></canvas>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">2025 Buyer vs Seller Sides by Quarter</div>
-      <canvas id="buyerSellerBar" height="220"></canvas>
-    </div>
-  </div>
 </section>
 
-<!-- ════════════════════════════════════════ PRODUCTION ══ -->
-<section class="tab-panel" id="tab-production">
+<!-- ════════════════════════════════════════ 2025 PRODUCTION ══ -->
+<section class="tab-panel" id="tab-prod2025">
   <p class="section-heading">2025 Production Summary</p>
 
   <div class="kpi-grid">
@@ -468,6 +381,16 @@
       <div class="kpi-value">$4.8M</div>
       <div class="kpi-sub">Oct–Dec 2025</div>
     </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Total Closings</div>
+      <div class="kpi-value">28</div>
+      <div class="kpi-sub">Full year 2025</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Avg Close Price</div>
+      <div class="kpi-value">$836K</div>
+      <div class="kpi-sub">2025 average</div>
+    </div>
   </div>
 
   <div class="chart-grid-2">
@@ -476,12 +399,60 @@
       <canvas id="qtrGoalChart" height="260"></canvas>
     </div>
     <div class="chart-card">
-      <div class="chart-title">2024 Volume by Month</div>
-      <canvas id="vol2024Monthly" height="260"></canvas>
+      <div class="chart-title">2025 Sales Volume by Quarter</div>
+      <canvas id="volumeByQtr" height="260"></canvas>
     </div>
   </div>
 
+  <div class="chart-grid-2">
+    <div class="chart-card">
+      <div class="chart-title">2025 Buyer vs Seller Sides by Quarter</div>
+      <canvas id="buyerSellerBar" height="240"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">2024 Volume by Month</div>
+      <canvas id="vol2024Monthly" height="240"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ 2026 PRODUCTION ══ -->
+<section class="tab-panel" id="tab-prod2026">
   <p class="section-heading">Agent Production — 2026 YTD</p>
+
+  <div class="kpi-grid">
+    <div class="kpi-card forest">
+      <div class="kpi-label">2026 Closings YTD</div>
+      <div class="kpi-value">13</div>
+      <div class="kpi-sub">Through April 2026</div>
+    </div>
+    <div class="kpi-card tan">
+      <div class="kpi-label">Total Volume</div>
+      <div class="kpi-value">$9.1M</div>
+      <div class="kpi-sub">All sides combined</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Avg Close Price</div>
+      <div class="kpi-value">$699K</div>
+      <div class="kpi-sub">2026 YTD</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Buyer Sides</div>
+      <div class="kpi-value">7</div>
+      <div class="kpi-sub">2026 closings</div>
+    </div>
+    <div class="kpi-card terra">
+      <div class="kpi-label">Seller Sides</div>
+      <div class="kpi-value">6</div>
+      <div class="kpi-sub">2026 closings</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Property Types</div>
+      <div class="kpi-value">12 SF</div>
+      <div class="kpi-sub">+ 1 Condo</div>
+    </div>
+  </div>
+
   <div class="agent-grid">
     <div class="agent-card">
       <div class="agent-name">Ashley · AB</div>
@@ -506,9 +477,116 @@
     </div>
   </div>
 
-  <div class="chart-card">
-    <div class="chart-title">2026 Closings by Month &amp; Agent</div>
-    <canvas id="agentMonthly2026" height="170"></canvas>
+  <div class="chart-grid-2" style="margin-bottom:22px">
+    <div class="chart-card">
+      <div class="chart-title">2026 Closings by Month &amp; Agent</div>
+      <canvas id="agentMonthly2026" height="220"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Volume by Month — 2026</div>
+      <canvas id="vol2026Monthly" height="220"></canvas>
+    </div>
+  </div>
+
+  <p class="section-heading">2026 Closed Transactions</p>
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Close Date</th>
+          <th>Address</th>
+          <th>Agent</th>
+          <th>Side</th>
+          <th>Property Type</th>
+          <th>Close Price</th>
+        </tr>
+      </thead>
+      <tbody id="closings2026Body"></tbody>
+    </table>
+  </div>
+
+  <div class="chart-card" style="margin-bottom:22px">
+    <div class="chart-title">Close Price Distribution — 2026</div>
+    <canvas id="closePriceBar" height="200"></canvas>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ 2025 vs 2026 ══ -->
+<section class="tab-panel" id="tab-compare">
+  <p class="section-heading">2025 vs 2026 — Historical Comparison</p>
+
+  <div class="compare-header">
+    <div class="compare-col-label y2025">2025 Full Year</div>
+    <div class="compare-col-label y2026">2026 YTD (Jan–Apr)</div>
+  </div>
+
+  <div class="compare-kpi-row">
+    <div class="kpi-grid" style="margin-bottom:0">
+      <div class="kpi-card forest">
+        <div class="kpi-label">Total Volume</div>
+        <div class="kpi-value">$23.4M</div>
+        <div class="kpi-sub">All sides · Full year</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Total Closings</div>
+        <div class="kpi-value">28</div>
+        <div class="kpi-sub">Full year 2025</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Avg Close Price</div>
+        <div class="kpi-value">$836K</div>
+        <div class="kpi-sub">2025 average</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Referrals</div>
+        <div class="kpi-value">69</div>
+        <div class="kpi-sub">Full year 2025</div>
+      </div>
+    </div>
+    <div class="kpi-grid" style="margin-bottom:0">
+      <div class="kpi-card tan">
+        <div class="kpi-label">Total Volume</div>
+        <div class="kpi-value">$9.1M</div>
+        <div class="kpi-sub">4 months YTD</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Total Closings</div>
+        <div class="kpi-value">13</div>
+        <div class="kpi-sub">4 months YTD</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Avg Close Price</div>
+        <div class="kpi-value">$699K</div>
+        <div class="kpi-sub">2026 YTD average</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Referrals</div>
+        <div class="kpi-value">35</div>
+        <div class="kpi-sub">4 months YTD</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-grid-2" style="margin-top:22px">
+    <div class="chart-card">
+      <div class="chart-title">Volume by Quarter — 2025 vs 2026 Pace</div>
+      <canvas id="compareVolumeChart" height="260"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Monthly Referrals — 2025 vs 2026</div>
+      <canvas id="compareRefChart" height="260"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-grid-2">
+    <div class="chart-card">
+      <div class="chart-title">Buyer vs Seller Sides — 2025 Full Year vs 2026 YTD</div>
+      <canvas id="compareSidesChart" height="240"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Avg Close Price Trend — 2025 Quarters vs 2026 Months</div>
+      <canvas id="compareAvgPriceChart" height="240"></canvas>
+    </div>
   </div>
 </section>
 
@@ -560,25 +638,14 @@
       <canvas id="sourcePie2025" height="280"></canvas>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Monthly Referrals — 2024 vs 2025 vs 2026</div>
-      <canvas id="refMonthlyLine" height="280"></canvas>
+      <div class="chart-title">2026 YTD Referral Sources</div>
+      <canvas id="sourceDonut2026Ref" height="280"></canvas>
     </div>
   </div>
 
-  <p class="section-heading">2026 Referral Log</p>
-  <div class="table-card">
-    <table>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Client Name</th>
-          <th>Agent</th>
-          <th>Source</th>
-          <th>Referred By</th>
-        </tr>
-      </thead>
-      <tbody id="refTableBody"></tbody>
-    </table>
+  <div class="chart-card" style="margin-bottom:22px">
+    <div class="chart-title">Monthly Referrals — 2024 vs 2025 vs 2026</div>
+    <canvas id="refMonthlyLine" height="220"></canvas>
   </div>
 </section>
 
@@ -595,37 +662,6 @@
     <div class="chart-card">
       <div class="chart-title">Weekly Showings — 2025</div>
       <canvas id="showingsChart" height="240"></canvas>
-    </div>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════ CLOSINGS ══ -->
-<section class="tab-panel" id="tab-closings">
-  <p class="section-heading">2026 Closed Transactions</p>
-  <div class="table-card">
-    <table>
-      <thead>
-        <tr>
-          <th>Close Date</th>
-          <th>Address</th>
-          <th>Agent</th>
-          <th>Side</th>
-          <th>Property Type</th>
-          <th>Close Price</th>
-        </tr>
-      </thead>
-      <tbody id="closings2026Body"></tbody>
-    </table>
-  </div>
-
-  <div class="chart-grid-2">
-    <div class="chart-card">
-      <div class="chart-title">Close Price Distribution</div>
-      <canvas id="closePriceBar" height="220"></canvas>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Volume by Month — 2026</div>
-      <canvas id="vol2026Monthly" height="220"></canvas>
     </div>
   </div>
 </section>
@@ -748,7 +784,6 @@ Chart.defaults.borderColor  = 'rgba(50,70,42,0.10)';
 Chart.defaults.font.family  = "'Jost', sans-serif";
 Chart.defaults.font.size    = 12;
 
-// ══════════════════ HELPERS ══════════════════
 const fmt = n => n >= 1e6 ? '$'+(n/1e6).toFixed(1)+'M' : n >= 1e3 ? '$'+(n/1e3).toFixed(0)+'K' : '$'+n;
 
 function showTab(id, el) {
@@ -759,22 +794,6 @@ function showTab(id, el) {
 }
 
 // ══════════════════ TABLES ══════════════════
-function buildRefTable() {
-  const tbody = document.getElementById('refTableBody');
-  referrals2026.forEach(r => {
-    const month = r.date.startsWith('1.') ? 'Jan' : r.date.startsWith('2.') ? 'Feb' : r.date.startsWith('3.') ? 'Mar' : 'Apr';
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td style="color:var(--text-muted);font-size:12px">${month} ${r.date.split('.')[1]}</td>
-      <td style="font-weight:500">${r.name}</td>
-      <td><span class="pill ${r.agent === 'LM' ? 'lm' : r.agent === 'AB' ? 'ab' : ''}">${r.agent}</span></td>
-      <td>${r.source}</td>
-      <td style="color:var(--text-muted)">${r.ref}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
 function buildClosingsTable() {
   const tbody = document.getElementById('closings2026Body');
   closings2026.forEach(c => {
@@ -818,13 +837,12 @@ function buildActivityGrid() {
 // ══════════════════ CHARTS ══════════════════
 function initCharts() {
   const gridLine = 'rgba(50,70,42,0.08)';
-
   const baseScales = {
     x: { grid:{ color:gridLine } },
     y: { grid:{ color:gridLine }, beginAtZero:true }
   };
 
-  // 1. Referral combo
+  // ── OVERVIEW ──
   new Chart('referralComboChart', {
     type:'bar',
     data:{
@@ -839,7 +857,6 @@ function initCharts() {
     options:{ responsive:true, plugins:{ legend:{ labels:{ boxWidth:12, padding:16 } } }, scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{stepSize:2} } } }
   });
 
-  // 2. Source donut 2026
   const src2026map = {};
   referrals2026.forEach(r => { src2026map[r.source] = (src2026map[r.source]||0)+1; });
   new Chart('sourceDonut2026', {
@@ -848,26 +865,7 @@ function initCharts() {
     options:{ responsive:true, plugins:{ legend:{ position:'right', labels:{ boxWidth:10, padding:14, font:{size:11} } } }, cutout:'62%' }
   });
 
-  // 3. 2025 volume by quarter
-  new Chart('volumeByQtr', {
-    type:'bar',
-    data:{ labels:['Q1','Q2','Q3','Q4'], datasets:[{ label:'Volume', data:[4319495,8287365,6012640,4770955], backgroundColor:[C.teal,C.forest,C.tan,C.terra], borderRadius:6 }] },
-    options:{ responsive:true, plugins:{ legend:{display:false} }, scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{ callback:v=>'$'+Math.round(v/1e6)+'M' } } } }
-  });
-
-  // 4. Buyer vs Seller
-  new Chart('buyerSellerBar', {
-    type:'bar',
-    data:{ labels:['Q1','Q2','Q3','Q4'],
-      datasets:[
-        { label:'Buyer', data:[6,6,3,3], backgroundColor:C.teal+'cc', borderRadius:5 },
-        { label:'Seller', data:[2,8,8,4], backgroundColor:C.tan+'cc', borderRadius:5 },
-      ]
-    },
-    options:{ responsive:true, plugins:{ legend:{labels:{boxWidth:12,padding:16}} }, scales:{ x:{stacked:true,grid:{color:gridLine}}, y:{stacked:true,beginAtZero:true,grid:{color:gridLine}} } }
-  });
-
-  // 5. Goal pace line
+  // ── 2025 PRODUCTION ──
   new Chart('qtrGoalChart', {
     type:'line',
     data:{ labels:['Start','Q1','Q2','Q3','Q4'],
@@ -879,7 +877,23 @@ function initCharts() {
     options:{ responsive:true, plugins:{ legend:{labels:{boxWidth:12,padding:16}} }, scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{ callback:v=>'$'+Math.round(v/1e6)+'M' } } } }
   });
 
-  // 6. 2024 monthly
+  new Chart('volumeByQtr', {
+    type:'bar',
+    data:{ labels:['Q1','Q2','Q3','Q4'], datasets:[{ label:'Volume', data:[4319495,8287365,6012640,4770955], backgroundColor:[C.teal,C.forest,C.tan,C.terra], borderRadius:6 }] },
+    options:{ responsive:true, plugins:{ legend:{display:false} }, scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{ callback:v=>'$'+Math.round(v/1e6)+'M' } } } }
+  });
+
+  new Chart('buyerSellerBar', {
+    type:'bar',
+    data:{ labels:['Q1','Q2','Q3','Q4'],
+      datasets:[
+        { label:'Buyer', data:[6,6,3,3], backgroundColor:C.teal+'cc', borderRadius:5 },
+        { label:'Seller', data:[2,8,8,4], backgroundColor:C.tan+'cc', borderRadius:5 },
+      ]
+    },
+    options:{ responsive:true, plugins:{ legend:{labels:{boxWidth:12,padding:16}} }, scales:{ x:{stacked:true,grid:{color:gridLine}}, y:{stacked:true,beginAtZero:true,grid:{color:gridLine}} } }
+  });
+
   const m2024 = [2605091,2871947,3991755,0,3740000,5471000,2838200,1734000,1297500,1250000,1326000,2230131];
   new Chart('vol2024Monthly', {
     type:'bar',
@@ -887,14 +901,109 @@ function initCharts() {
     options:{ responsive:true, plugins:{ legend:{display:false} }, scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{ callback:v=>'$'+Math.round(v/1e6)+'M' } } } }
   });
 
-  // 7. Source pie 2025
+  // ── 2026 PRODUCTION ──
+  new Chart('agentMonthly2026', {
+    type:'bar',
+    data:{ labels:['Feb','Mar','Apr'],
+      datasets:[
+        { label:'Ashley (AB)', data:[1,2,3], backgroundColor:C.terra+'bb', borderRadius:5 },
+        { label:'Lorin (LM)',  data:[2,4,2], backgroundColor:C.teal+'bb', borderRadius:5 },
+      ]
+    },
+    options:{ responsive:true, plugins:{ legend:{labels:{boxWidth:12,padding:16}} }, scales:{ x:{stacked:true,grid:{color:gridLine}}, y:{stacked:true,beginAtZero:true,grid:{color:gridLine},ticks:{stepSize:1}} } }
+  });
+
+  const mo2026 = { Feb:0, Mar:0, Apr:0 };
+  closings2026.forEach(c => { if(mo2026[c.mo]!==undefined) mo2026[c.mo] += c.price; });
+  new Chart('vol2026Monthly', {
+    type:'bar',
+    data:{ labels:Object.keys(mo2026), datasets:[{ label:'Volume', data:Object.values(mo2026), backgroundColor:[C.sage,C.teal,C.tan], borderRadius:6 }] },
+    options:{ responsive:true, plugins:{ legend:{display:false} }, scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{ callback:v=>'$'+Math.round(v/1e6)+'M' } } } }
+  });
+
+  new Chart('closePriceBar', {
+    type:'bar',
+    data:{ labels:['Under $300K','$300–500K','$500–750K','$750K–$1M','Over $1M'],
+      datasets:[{ label:'# Closings', data:[1,3,5,2,2], backgroundColor:[C.blush,C.sage,C.teal,C.tan,C.forest], borderRadius:6 }]
+    },
+    options:{ responsive:true, plugins:{ legend:{display:false} }, scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{stepSize:1} } } }
+  });
+
+  // ── 2025 vs 2026 COMPARISON ──
+  // Volume comparison: 2025 by quarter vs 2026 monthly annualized
+  new Chart('compareVolumeChart', {
+    type:'bar',
+    data:{
+      labels:['Q1','Q2','Q3','Q4'],
+      datasets:[
+        { label:'2025', data:[4319495,8287365,6012640,4770955], backgroundColor:C.teal+'bb', borderRadius:5 },
+        { label:'2026 (YTD / projected)', data:[2884000,6210451,null,null], backgroundColor:C.tan+'bb', borderRadius:5 },
+      ]
+    },
+    options:{
+      responsive:true,
+      plugins:{ legend:{labels:{boxWidth:12,padding:16}}, tooltip:{ callbacks:{ label: ctx => fmt(ctx.raw||0) } } },
+      scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{ callback:v=>'$'+Math.round(v/1e6)+'M' } } }
+    }
+  });
+
+  // Monthly referrals comparison
+  new Chart('compareRefChart', {
+    type:'line',
+    data:{ labels:months,
+      datasets:[
+        { label:'2025', data:ref2025, borderColor:C.teal, backgroundColor:'rgba(130,153,135,0.08)', fill:true, tension:0.4, pointRadius:3, borderWidth:2 },
+        { label:'2026 Goal', data:refGoal2026, borderColor:C.tan, borderDash:[5,4], backgroundColor:'transparent', tension:0.4, pointRadius:3 },
+        { label:'2026 Actual', data:[...ref2026actual,...Array(8).fill(null)], borderColor:C.terra, backgroundColor:'transparent', tension:0.4, pointRadius:4, borderWidth:2.5 },
+      ]
+    },
+    options:{ responsive:true, plugins:{ legend:{labels:{boxWidth:12,padding:16}} }, scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{stepSize:2} } } }
+  });
+
+  // Buyer vs Seller sides comparison
+  new Chart('compareSidesChart', {
+    type:'bar',
+    data:{
+      labels:['Buyer Sides','Seller Sides'],
+      datasets:[
+        { label:'2025 Full Year', data:[18,10], backgroundColor:C.teal+'bb', borderRadius:5 },
+        { label:'2026 YTD', data:[7,6], backgroundColor:C.tan+'bb', borderRadius:5 },
+      ]
+    },
+    options:{ responsive:true, plugins:{ legend:{labels:{boxWidth:12,padding:16}} }, scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{stepSize:2} } } }
+  });
+
+  // Avg close price comparison
+  new Chart('compareAvgPriceChart', {
+    type:'line',
+    data:{
+      labels:['Q1 / Jan-Feb','Q2 / Mar','Q3 / Apr','Q4'],
+      datasets:[
+        { label:'2025 Avg by Qtr', data:[836000,836000,836000,836000], borderColor:C.teal, backgroundColor:'rgba(130,153,135,0.08)', fill:true, tension:0.3, pointRadius:4, borderWidth:2 },
+        { label:'2026 Avg by Period', data:[628250,917238,498900,null], borderColor:C.terra, backgroundColor:'transparent', tension:0.3, pointRadius:4, borderWidth:2.5 },
+      ]
+    },
+    options:{
+      responsive:true,
+      plugins:{ legend:{labels:{boxWidth:12,padding:16}}, tooltip:{ callbacks:{ label: ctx => fmt(ctx.raw||0) } } },
+      scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{ callback:v=>'$'+Math.round(v/1e3)+'K' } } }
+    }
+  });
+
+  // ── REFERRALS ──
   new Chart('sourcePie2025', {
     type:'doughnut',
     data:{ labels:src2025.map(s=>s.source), datasets:[{ data:src2025.map(s=>s.val), backgroundColor:PALETTE, borderColor:C.white, borderWidth:3 }] },
     options:{ responsive:true, plugins:{ legend:{ position:'right', labels:{ boxWidth:10, padding:14, font:{size:11} } } }, cutout:'55%' }
   });
 
-  // 8. Ref monthly line
+  // 2026 source donut for referrals tab
+  new Chart('sourceDonut2026Ref', {
+    type:'doughnut',
+    data:{ labels:Object.keys(src2026map), datasets:[{ data:Object.values(src2026map), backgroundColor:PALETTE, borderColor:C.white, borderWidth:3 }] },
+    options:{ responsive:true, plugins:{ legend:{ position:'right', labels:{ boxWidth:10, padding:14, font:{size:11} } } }, cutout:'62%' }
+  });
+
   new Chart('refMonthlyLine', {
     type:'line',
     data:{ labels:months,
@@ -908,37 +1017,7 @@ function initCharts() {
     options:{ responsive:true, plugins:{ legend:{labels:{boxWidth:12,padding:16}} }, scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{stepSize:2} } } }
   });
 
-  // 9. Agent monthly 2026
-  new Chart('agentMonthly2026', {
-    type:'bar',
-    data:{ labels:['Feb','Mar','Apr'],
-      datasets:[
-        { label:'Ashley (AB)', data:[1,2,3], backgroundColor:C.terra+'bb', borderRadius:5 },
-        { label:'Lorin (LM)',  data:[2,4,2], backgroundColor:C.teal+'bb', borderRadius:5 },
-      ]
-    },
-    options:{ responsive:true, plugins:{ legend:{labels:{boxWidth:12,padding:16}} }, scales:{ x:{stacked:true,grid:{color:gridLine}}, y:{stacked:true,beginAtZero:true,grid:{color:gridLine},ticks:{stepSize:1}} } }
-  });
-
-  // 10. Close price distribution
-  new Chart('closePriceBar', {
-    type:'bar',
-    data:{ labels:['Under $300K','$300–500K','$500–750K','$750K–$1M','Over $1M'],
-      datasets:[{ label:'# Closings', data:[1,3,5,2,2], backgroundColor:[C.blush,C.sage,C.teal,C.tan,C.forest], borderRadius:6 }]
-    },
-    options:{ responsive:true, plugins:{ legend:{display:false} }, scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{stepSize:1} } } }
-  });
-
-  // 11. 2026 volume by month
-  const mo2026 = { Feb:0, Mar:0, Apr:0 };
-  closings2026.forEach(c => { if(mo2026[c.mo]!==undefined) mo2026[c.mo] += c.price; });
-  new Chart('vol2026Monthly', {
-    type:'bar',
-    data:{ labels:Object.keys(mo2026), datasets:[{ label:'Volume', data:Object.values(mo2026), backgroundColor:[C.sage,C.teal,C.tan], borderRadius:6 }] },
-    options:{ responsive:true, plugins:{ legend:{display:false} }, scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{ callback:v=>'$'+Math.round(v/1e6)+'M' } } } }
-  });
-
-  // 12. Calls weekly
+  // ── ACTIVITY ──
   const callWkly = [29,33,32,24,34,10,16,26,34,21,19,5,33,0,0,12,38,21,25,10,12,30,17,11,21,34,20,23,28,4];
   const wkLabels = callWkly.map((_,i)=>`W${i+1}`);
   new Chart('callsChart', {
@@ -952,7 +1031,6 @@ function initCharts() {
     options:{ responsive:true, plugins:{ legend:{labels:{boxWidth:12,padding:14}} }, scales:{ ...baseScales } }
   });
 
-  // 13. Showings weekly
   const showWkly = [16,8,6,0,11,6,24,2,6,12,1,4,4,10,4,1,1,20,0,10,10,0,9,10,1,3,2,0,0,0];
   new Chart('showingsChart', {
     type:'bar',
@@ -962,7 +1040,6 @@ function initCharts() {
 }
 
 // ══════════════════ INIT ══════════════════
-buildRefTable();
 buildClosingsTable();
 buildActivityGrid();
 initCharts();

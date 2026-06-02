@@ -6,15 +6,23 @@
   <title>Brinkman Team 2026 KPI Dashboard</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <style>
+    /* Brinkman Team Brand Colors:
+       Dark Green:  #36452C
+       Sage:        #C1C19E
+       Slate Green: #869888
+       Warm Grey:   #BBBBB7
+       Cream:       #F1EBE2
+       Tan/Camel:   #B9A283
+    */
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
-      background: #f4f5f7;
-      color: #2c3e50;
+      background: #F1EBE2;
+      color: #36452C;
       min-height: 100vh;
     }
     header {
-      background: linear-gradient(135deg, #1a2a4a 0%, #2c5282 100%);
+      background: linear-gradient(135deg, #36452C 0%, #4a5e3a 100%);
       color: white;
       padding: 28px 40px;
       display: flex;
@@ -38,22 +46,22 @@
       background: white;
       border-radius: 12px;
       padding: 20px 22px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-      border-left: 4px solid #3182ce;
+      box-shadow: 0 2px 8px rgba(54,69,44,0.10);
+      border-left: 4px solid #36452C;
     }
-    .kpi-card.green { border-left-color: #38a169; }
-    .kpi-card.orange { border-left-color: #dd6b20; }
-    .kpi-card.purple { border-left-color: #805ad5; }
-    .kpi-card.teal { border-left-color: #319795; }
-    .kpi-card .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.8px; color: #718096; font-weight: 600; margin-bottom: 6px; }
-    .kpi-card .value { font-size: 1.8rem; font-weight: 700; color: #1a202c; line-height: 1; }
-    .kpi-card .sub { font-size: 0.8rem; color: #718096; margin-top: 6px; }
-    .kpi-card .progress-bar { height: 5px; background: #e2e8f0; border-radius: 3px; margin-top: 10px; overflow: hidden; }
-    .kpi-card .progress-fill { height: 100%; border-radius: 3px; background: #3182ce; }
-    .kpi-card.green .progress-fill { background: #38a169; }
-    .kpi-card.orange .progress-fill { background: #dd6b20; }
-    .kpi-card.purple .progress-fill { background: #805ad5; }
-    .kpi-card.teal .progress-fill { background: #319795; }
+    .kpi-card.green { border-left-color: #869888; }
+    .kpi-card.orange { border-left-color: #C1C19E; }
+    .kpi-card.purple { border-left-color: #B9A283; }
+    .kpi-card.teal { border-left-color: #BBBBB7; }
+    .kpi-card .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.8px; color: #869888; font-weight: 600; margin-bottom: 6px; }
+    .kpi-card .value { font-size: 1.8rem; font-weight: 700; color: #36452C; line-height: 1; }
+    .kpi-card .sub { font-size: 0.8rem; color: #869888; margin-top: 6px; }
+    .kpi-card .progress-bar { height: 5px; background: #F1EBE2; border-radius: 3px; margin-top: 10px; overflow: hidden; }
+    .kpi-card .progress-fill { height: 100%; border-radius: 3px; background: #36452C; }
+    .kpi-card.green .progress-fill { background: #869888; }
+    .kpi-card.orange .progress-fill { background: #C1C19E; }
+    .kpi-card.purple .progress-fill { background: #B9A283; }
+    .kpi-card.teal .progress-fill { background: #BBBBB7; }
 
     /* ---- Section layout ---- */
     .section-grid {
@@ -72,31 +80,31 @@
       background: white;
       border-radius: 12px;
       padding: 22px 24px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      box-shadow: 0 2px 8px rgba(54,69,44,0.10);
     }
     .card h2 {
       font-size: 1rem;
       font-weight: 700;
-      color: #1a2a4a;
+      color: #36452C;
       margin-bottom: 18px;
       padding-bottom: 10px;
-      border-bottom: 2px solid #e2e8f0;
+      border-bottom: 2px solid #F1EBE2;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
     /* ---- Referral table ---- */
     table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-    th { background: #f7fafc; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.6px; color: #4a5568; padding: 8px 10px; text-align: center; border-bottom: 2px solid #e2e8f0; }
+    th { background: #F1EBE2; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.6px; color: #869888; padding: 8px 10px; text-align: center; border-bottom: 2px solid #F1EBE2; }
     th:first-child { text-align: left; }
-    td { padding: 8px 10px; text-align: center; border-bottom: 1px solid #f0f0f0; }
+    td { padding: 8px 10px; text-align: center; border-bottom: 1px solid #F1EBE2; color: #36452C; }
     td:first-child { text-align: left; font-weight: 500; }
-    tr:last-child td { border-bottom: none; font-weight: 700; background: #f7fafc; }
+    tr:last-child td { border-bottom: none; font-weight: 700; background: #F1EBE2; }
     .badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
-    .badge.over { background: #c6f6d5; color: #276749; }
-    .badge.under { background: #fed7d7; color: #9b2c2c; }
-    .badge.flat { background: #e9ecef; color: #495057; }
-    .badge.future { background: #e2e8f0; color: #718096; }
+    .badge.over { background: #d4e0c8; color: #36452C; }
+    .badge.under { background: #f2ddd8; color: #7a3628; }
+    .badge.flat { background: #BBBBB7; color: #36452C; }
+    .badge.future { background: #F1EBE2; color: #869888; }
 
     /* ---- Source list ---- */
     .source-list { list-style: none; }
@@ -105,29 +113,29 @@
       justify-content: space-between;
       align-items: center;
       padding: 8px 0;
-      border-bottom: 1px solid #f0f0f0;
+      border-bottom: 1px solid #F1EBE2;
       font-size: 0.88rem;
     }
     .source-list li:last-child { border-bottom: none; }
-    .source-list .source-name { color: #2d3748; }
-    .source-list .source-count { font-weight: 700; color: #1a2a4a; }
-    .source-bar-wrap { flex: 1; margin: 0 12px; height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; }
-    .source-bar { height: 100%; border-radius: 3px; background: #3182ce; }
+    .source-list .source-name { color: #36452C; }
+    .source-list .source-count { font-weight: 700; color: #36452C; }
+    .source-bar-wrap { flex: 1; margin: 0 12px; height: 6px; background: #F1EBE2; border-radius: 3px; overflow: hidden; }
+    .source-bar { height: 100%; border-radius: 3px; background: #B9A283; }
 
     /* ---- Transaction table ---- */
     .tx-table { font-size: 0.82rem; }
     .tx-table th { font-size: 0.68rem; }
     .tx-table td { padding: 7px 8px; }
     .tag { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; }
-    .tag.seller { background: #e9d8fd; color: #553c9a; }
-    .tag.buyer { background: #bee3f8; color: #2c5282; }
+    .tag.seller { background: #d4e0c8; color: #36452C; }
+    .tag.buyer { background: #e8e2d6; color: #5a4a30; }
 
     /* ---- Agent cards ---- */
     .agent-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-    .agent-card { background: #f7fafc; border-radius: 8px; padding: 14px 16px; text-align: center; }
-    .agent-card .agent-name { font-weight: 700; font-size: 0.9rem; color: #1a2a4a; margin-bottom: 6px; }
-    .agent-card .agent-stat { font-size: 1.2rem; font-weight: 700; color: #2c5282; }
-    .agent-card .agent-label { font-size: 0.72rem; color: #718096; text-transform: uppercase; letter-spacing: 0.5px; }
+    .agent-card { background: #F1EBE2; border-radius: 8px; padding: 14px 16px; text-align: center; }
+    .agent-card .agent-name { font-weight: 700; font-size: 0.9rem; color: #36452C; margin-bottom: 6px; }
+    .agent-card .agent-stat { font-size: 1.2rem; font-weight: 700; color: #36452C; }
+    .agent-card .agent-label { font-size: 0.72rem; color: #869888; text-transform: uppercase; letter-spacing: 0.5px; }
 
     /* chart */
     .chart-wrap { position: relative; }
@@ -136,7 +144,7 @@
       text-align: center;
       padding: 20px;
       font-size: 0.78rem;
-      color: #a0aec0;
+      color: #869888;
     }
   </style>
 </head>
@@ -276,7 +284,7 @@
           <span class="source-count">1</span>
         </li>
       </ul>
-      <div style="margin-top:14px; padding-top:12px; border-top:2px solid #e2e8f0; display:flex; justify-content:space-between; font-size:0.85rem;">
+      <div style="margin-top:14px; padding-top:12px; border-top:2px solid #F1EBE2; display:flex; justify-content:space-between; font-size:0.85rem; color:#36452C;">
         <strong>Total</strong><strong>49</strong>
       </div>
     </div>
@@ -363,14 +371,14 @@
         <div style="display:flex;justify-content:space-between;padding:4px 0"><span>Q4 Volume</span><strong>$4.8M</strong></div>
       </div>
     </div>
-    <div class="card" style="border: 2px solid #3182ce;">
+    <div class="card" style="border: 2px solid #36452C;">
       <h2>2026 YTD (thru May)</h2>
       <div style="font-size:0.88rem; line-height:1.9;">
-        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #f0f0f0;padding:4px 0"><span>Team Volume</span><strong style="color:#3182ce">$13.2M</strong></div>
-        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #f0f0f0;padding:4px 0"><span>Transactions</span><strong style="color:#3182ce">19</strong></div>
-        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #f0f0f0;padding:4px 0"><span>Referrals</span><strong style="color:#3182ce">46</strong></div>
-        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #f0f0f0;padding:4px 0"><span>Testimonials</span><strong style="color:#3182ce">8</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:4px 0"><span>Goal</span><strong style="color:#3182ce">$30M</strong></div>
+        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #F1EBE2;padding:4px 0"><span>Team Volume</span><strong style="color:#36452C">$13.2M</strong></div>
+        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #F1EBE2;padding:4px 0"><span>Transactions</span><strong style="color:#36452C">19</strong></div>
+        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #F1EBE2;padding:4px 0"><span>Referrals</span><strong style="color:#36452C">46</strong></div>
+        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #F1EBE2;padding:4px 0"><span>Testimonials</span><strong style="color:#36452C">8</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0"><span>Goal</span><strong style="color:#36452C">$30M</strong></div>
       </div>
     </div>
   </div>
@@ -389,25 +397,25 @@ new Chart(document.getElementById('referralChart'), {
       {
         label: '2024',
         data: [8,11,10,11,6,10,8,8,6,7,6,7],
-        borderColor: '#a0aec0', backgroundColor: 'transparent',
+        borderColor: '#BBBBB7', backgroundColor: 'transparent',
         borderWidth: 2, pointRadius: 3
       },
       {
         label: '2025',
         data: [10,5,9,8,4,4,5,8,6,7,1,2],
-        borderColor: '#ed8936', backgroundColor: 'transparent',
+        borderColor: '#B9A283', backgroundColor: 'transparent',
         borderWidth: 2, pointRadius: 3
       },
       {
         label: '2026 Goal',
         data: [10,7,11,10,9,6,7,10,10,10,6,4],
-        borderColor: '#3182ce', backgroundColor: 'transparent',
+        borderColor: '#C1C19E', backgroundColor: 'transparent',
         borderWidth: 2, borderDash: [5,5], pointRadius: 0
       },
       {
         label: '2026 Actual',
         data: [11,11,9,5,11,null,null,null,null,null,null,null],
-        borderColor: '#38a169', backgroundColor: 'rgba(56,161,105,0.1)',
+        borderColor: '#36452C', backgroundColor: 'rgba(54,69,44,0.1)',
         borderWidth: 2.5, pointRadius: 4, fill: false
       }
     ]
@@ -431,12 +439,12 @@ new Chart(document.getElementById('volumeChart'), {
       {
         label: 'AB',
         data: [1900000, 2925000, 1201900, 3958000],
-        backgroundColor: '#3182ce'
+        backgroundColor: '#36452C'
       },
       {
         label: 'LM',
         data: [1185000, 2567000, 1292500, 295000],
-        backgroundColor: '#38a169'
+        backgroundColor: '#B9A283'
       }
     ]
   },

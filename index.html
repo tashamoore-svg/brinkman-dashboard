@@ -1,1048 +1,465 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Brinkman Team · 2026 Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<style>
-  :root {
-    --forest:    #32462a;
-    --sage:      #c1c19a;
-    --teal:      #829987;
-    --silver:    #bbbcb7;
-    --cream:     #f3ebe2;
-    --tan:       #bea17f;
-    --blush:     #e6cfc7;
-    --terra:     #d6a58a;
-    --white:     #faf8f4;
-    --olive:     #71695b;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brinkman Team 2026 KPI Dashboard</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f4f5f7;
+      color: #2c3e50;
+      min-height: 100vh;
+    }
+    header {
+      background: linear-gradient(135deg, #1a2a4a 0%, #2c5282 100%);
+      color: white;
+      padding: 28px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 { font-size: 1.7rem; font-weight: 700; letter-spacing: 0.5px; }
+    header .subtitle { font-size: 0.9rem; opacity: 0.75; margin-top: 4px; }
+    header .updated { font-size: 0.85rem; opacity: 0.65; }
 
-    --bg:          #f3ebe2;
-    --bg-card:     #faf8f4;
-    --bg-nav:      #32462a;
-    --text-main:   #32462a;
-    --text-muted:  #71695b;
-    --text-light:  #bbbcb7;
-    --border:      rgba(50,70,42,0.12);
-    --border-card: rgba(50,70,42,0.09);
-    --accent:      #32462a;
-    --accent2:     #829987;
-    --accent3:     #d6a58a;
-    --highlight:   #bea17f;
-  }
+    .container { max-width: 1280px; margin: 0 auto; padding: 28px 24px; }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ---- KPI Cards ---- */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .kpi-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px 22px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      border-left: 4px solid #3182ce;
+    }
+    .kpi-card.green { border-left-color: #38a169; }
+    .kpi-card.orange { border-left-color: #dd6b20; }
+    .kpi-card.purple { border-left-color: #805ad5; }
+    .kpi-card.teal { border-left-color: #319795; }
+    .kpi-card .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.8px; color: #718096; font-weight: 600; margin-bottom: 6px; }
+    .kpi-card .value { font-size: 1.8rem; font-weight: 700; color: #1a202c; line-height: 1; }
+    .kpi-card .sub { font-size: 0.8rem; color: #718096; margin-top: 6px; }
+    .kpi-card .progress-bar { height: 5px; background: #e2e8f0; border-radius: 3px; margin-top: 10px; overflow: hidden; }
+    .kpi-card .progress-fill { height: 100%; border-radius: 3px; background: #3182ce; }
+    .kpi-card.green .progress-fill { background: #38a169; }
+    .kpi-card.orange .progress-fill { background: #dd6b20; }
+    .kpi-card.purple .progress-fill { background: #805ad5; }
+    .kpi-card.teal .progress-fill { background: #319795; }
 
-  body {
-    background: var(--bg);
-    color: var(--text-main);
-    font-family: 'Jost', sans-serif;
-    font-size: 14px;
-    min-height: 100vh;
-  }
+    /* ---- Section layout ---- */
+    .section-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .section-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+    .section-grid.wide { grid-template-columns: 2fr 1fr; }
+    @media (max-width: 900px) {
+      .section-grid, .section-grid.three, .section-grid.wide { grid-template-columns: 1fr; }
+    }
 
-  header {
-    background: var(--forest);
-    padding: 0 36px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 64px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .logo-area { display: flex; align-items: baseline; gap: 14px; }
-  .logo-area h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 24px; font-weight: 300;
-    color: var(--cream); letter-spacing: 2px; text-transform: uppercase;
-  }
-  .logo-area .divider { width: 1px; height: 18px; background: rgba(243,235,226,0.3); }
-  .logo-area p { font-size: 10px; color: var(--sage); letter-spacing: 3px; text-transform: uppercase; font-weight: 400; }
-  .date-badge {
-    background: rgba(243,235,226,0.12);
-    border: 1px solid rgba(243,235,226,0.2);
-    border-radius: 6px; padding: 5px 14px;
-    font-size: 11px; color: var(--sage); letter-spacing: 1px;
-  }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 22px 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    .card h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1a2a4a;
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e2e8f0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
 
-  nav {
-    background: var(--white);
-    border-bottom: 1px solid var(--border);
-    padding: 0 36px;
-    display: flex; gap: 2px;
-  }
-  .tab-btn {
-    background: none; border: none;
-    color: var(--text-muted);
-    font-family: 'Jost', sans-serif;
-    font-size: 12px; font-weight: 500;
-    padding: 15px 22px; cursor: pointer;
-    border-bottom: 2px solid transparent;
-    letter-spacing: 1.5px; text-transform: uppercase;
-    transition: all 0.2s;
-  }
-  .tab-btn:hover { color: var(--forest); }
-  .tab-btn.active { color: var(--forest); border-bottom-color: var(--terra); }
+    /* ---- Referral table ---- */
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    th { background: #f7fafc; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.6px; color: #4a5568; padding: 8px 10px; text-align: center; border-bottom: 2px solid #e2e8f0; }
+    th:first-child { text-align: left; }
+    td { padding: 8px 10px; text-align: center; border-bottom: 1px solid #f0f0f0; }
+    td:first-child { text-align: left; font-weight: 500; }
+    tr:last-child td { border-bottom: none; font-weight: 700; background: #f7fafc; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
+    .badge.over { background: #c6f6d5; color: #276749; }
+    .badge.under { background: #fed7d7; color: #9b2c2c; }
+    .badge.flat { background: #e9ecef; color: #495057; }
+    .badge.future { background: #e2e8f0; color: #718096; }
 
-  main { padding: 30px 36px; max-width: 1400px; margin: 0 auto; }
+    /* ---- Source list ---- */
+    .source-list { list-style: none; }
+    .source-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 0.88rem;
+    }
+    .source-list li:last-child { border-bottom: none; }
+    .source-list .source-name { color: #2d3748; }
+    .source-list .source-count { font-weight: 700; color: #1a2a4a; }
+    .source-bar-wrap { flex: 1; margin: 0 12px; height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; }
+    .source-bar { height: 100%; border-radius: 3px; background: #3182ce; }
 
-  .tab-panel { display: none; }
-  .tab-panel.active { display: block; }
+    /* ---- Transaction table ---- */
+    .tx-table { font-size: 0.82rem; }
+    .tx-table th { font-size: 0.68rem; }
+    .tx-table td { padding: 7px 8px; }
+    .tag { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; }
+    .tag.seller { background: #e9d8fd; color: #553c9a; }
+    .tag.buyer { background: #bee3f8; color: #2c5282; }
 
-  .section-heading {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 20px; font-weight: 400; font-style: italic;
-    color: var(--forest);
-    margin-bottom: 20px; padding-bottom: 10px;
-    border-bottom: 1px solid var(--border); letter-spacing: 0.5px;
-  }
+    /* ---- Agent cards ---- */
+    .agent-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .agent-card { background: #f7fafc; border-radius: 8px; padding: 14px 16px; text-align: center; }
+    .agent-card .agent-name { font-weight: 700; font-size: 0.9rem; color: #1a2a4a; margin-bottom: 6px; }
+    .agent-card .agent-stat { font-size: 1.2rem; font-weight: 700; color: #2c5282; }
+    .agent-card .agent-label { font-size: 0.72rem; color: #718096; text-transform: uppercase; letter-spacing: 0.5px; }
 
-  .kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
-    gap: 14px; margin-bottom: 26px;
-  }
-  .kpi-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-card);
-    border-radius: 12px; padding: 20px 22px;
-    position: relative; overflow: hidden;
-    transition: box-shadow 0.2s;
-  }
-  .kpi-card:hover { box-shadow: 0 4px 20px rgba(50,70,42,0.10); }
-  .kpi-card::after {
-    content: ''; position: absolute;
-    bottom: 0; left: 0; right: 0; height: 3px;
-    background: var(--teal); border-radius: 0 0 12px 12px;
-  }
-  .kpi-card.terra::after { background: var(--terra); }
-  .kpi-card.tan::after   { background: var(--tan); }
-  .kpi-card.blush::after { background: var(--blush); }
-  .kpi-card.forest::after { background: var(--forest); }
+    /* chart */
+    .chart-wrap { position: relative; }
 
-  .kpi-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; font-weight: 500; }
-  .kpi-value { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 300; color: var(--forest); line-height: 1; }
-  .kpi-sub { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
-  .kpi-badge {
-    display: inline-block; padding: 2px 9px; border-radius: 20px;
-    font-size: 10px; font-weight: 600; margin-top: 7px; letter-spacing: 0.5px;
-  }
-  .kpi-badge.pos { background: rgba(130,153,135,0.18); color: var(--teal); }
-  .kpi-badge.neg { background: rgba(214,165,138,0.25); color: #b06b45; }
-  .kpi-badge.neu { background: rgba(190,161,127,0.2); color: var(--olive); }
-
-  .chart-grid-2 {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 18px; margin-bottom: 22px;
-  }
-  .chart-grid-3 {
-    display: grid; grid-template-columns: 1fr 1fr 1fr;
-    gap: 18px; margin-bottom: 22px;
-  }
-  .chart-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-card);
-    border-radius: 12px; padding: 22px 24px;
-    transition: box-shadow 0.2s;
-  }
-  .chart-card:hover { box-shadow: 0 4px 20px rgba(50,70,42,0.08); }
-  .chart-card.full { grid-column: 1 / -1; }
-  .chart-title {
-    font-size: 10px; font-weight: 600;
-    color: var(--text-muted); text-transform: uppercase;
-    letter-spacing: 2px; margin-bottom: 18px;
-  }
-
-  .table-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-card);
-    border-radius: 12px; overflow: hidden; margin-bottom: 22px;
-  }
-  .table-card table { width: 100%; border-collapse: collapse; }
-  .table-card th {
-    background: var(--forest); color: var(--sage);
-    font-size: 10px; text-transform: uppercase; letter-spacing: 2px;
-    padding: 13px 18px; text-align: left; font-weight: 500; font-family: 'Jost', sans-serif;
-  }
-  .table-card td {
-    padding: 12px 18px; border-bottom: 1px solid rgba(50,70,42,0.06);
-    font-size: 13px; color: var(--text-main);
-  }
-  .table-card tr:last-child td { border-bottom: none; }
-  .table-card tr:hover td { background: rgba(130,153,135,0.06); }
-
-  .pill {
-    display: inline-block; padding: 2px 10px; border-radius: 20px;
-    font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
-  }
-  .pill.buyer  { background: rgba(130,153,135,0.2); color: #4a7a56; }
-  .pill.seller { background: rgba(190,161,127,0.25); color: #8a6840; }
-  .pill.ab     { background: rgba(214,165,138,0.2); color: #9a5a38; }
-  .pill.lm     { background: rgba(130,153,135,0.2); color: #4a7a56; }
-
-  .progress-wrap { margin-bottom: 0; }
-  .progress-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
-  .progress-label { font-size: 12px; color: var(--text-main); font-weight: 500; }
-  .progress-nums { font-size: 11px; color: var(--text-muted); }
-  .progress-bar-bg { background: rgba(50,70,42,0.08); border-radius: 99px; height: 7px; overflow: hidden; }
-  .progress-bar-fill { height: 100%; border-radius: 99px; background: var(--teal); transition: width 1.2s ease; }
-  .progress-bar-fill.good  { background: var(--teal); }
-  .progress-bar-fill.warn  { background: var(--tan); }
-  .progress-bar-fill.over  { background: var(--forest); }
-
-  .activity-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 14px; margin-bottom: 24px;
-  }
-  .activity-item {
-    background: var(--bg-card); border: 1px solid var(--border-card);
-    border-radius: 10px; padding: 16px 20px;
-    display: flex; flex-direction: column; gap: 8px;
-  }
-  .activity-pct { font-size: 10px; color: var(--text-light); text-align: right; margin-top: 3px; }
-
-  .agent-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-    gap: 14px; margin-bottom: 24px;
-  }
-  .agent-card {
-    background: var(--bg-card); border: 1px solid var(--border-card);
-    border-radius: 12px; padding: 22px;
-  }
-  .agent-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 20px; font-weight: 400; color: var(--forest);
-    margin-bottom: 14px; border-bottom: 1px solid var(--border); padding-bottom: 10px;
-  }
-  .agent-stat { display: flex; justify-content: space-between; padding: 6px 0; }
-  .agent-stat-label { color: var(--text-muted); font-size: 12px; }
-  .agent-stat-val { font-weight: 600; font-size: 13px; color: var(--forest); }
-
-  .source-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 18px; margin-bottom: 22px;
-  }
-
-  /* Comparison tab styles */
-  .compare-header {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 18px; margin-bottom: 22px;
-  }
-  .compare-col-label {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 18px; font-weight: 400; font-style: italic;
-    color: var(--forest); text-align: center;
-    padding: 12px; border-radius: 8px;
-    margin-bottom: 0;
-  }
-  .compare-col-label.y2025 { background: rgba(130,153,135,0.12); border: 1px solid rgba(130,153,135,0.2); }
-  .compare-col-label.y2026 { background: rgba(190,161,127,0.12); border: 1px solid rgba(190,161,127,0.2); }
-
-  .compare-kpi-row {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 18px; margin-bottom: 14px;
-  }
-
-  footer {
-    text-align: center; padding: 28px;
-    color: var(--text-light); font-size: 10px;
-    letter-spacing: 2.5px; text-transform: uppercase;
-    border-top: 1px solid var(--border); margin-top: 16px;
-  }
-
-  @media (max-width: 900px) {
-    .chart-grid-2, .chart-grid-3, .source-grid, .compare-header, .compare-kpi-row { grid-template-columns: 1fr; }
-    main { padding: 20px 16px; }
-    header { padding: 0 16px; }
-    nav { padding: 0 16px; overflow-x: auto; }
-    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-</style>
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.78rem;
+      color: #a0aec0;
+    }
+  </style>
 </head>
 <body>
 
 <header>
-  <div class="logo-area">
-    <h1>Brinkman Team</h1>
-    <div class="divider"></div>
-    <p>Performance Dashboard · 2026</p>
+  <div>
+    <h1>🏡 Brinkman Team — 2026 KPI Dashboard</h1>
+    <div class="subtitle">Tracking performance through the year · Goal: $30,000,000</div>
   </div>
-  <div class="date-badge">May 8, 2026</div>
+  <div class="updated">Updated: June 2026</div>
 </header>
 
-<nav>
-  <button class="tab-btn active" onclick="showTab('overview', this)">Overview</button>
-  <button class="tab-btn" onclick="showTab('prod2025', this)">2025 Production</button>
-  <button class="tab-btn" onclick="showTab('prod2026', this)">2026 Production</button>
-  <button class="tab-btn" onclick="showTab('compare', this)">2025 vs 2026</button>
-  <button class="tab-btn" onclick="showTab('referrals', this)">Referrals</button>
-  <button class="tab-btn" onclick="showTab('activity', this)">Activity KPIs</button>
-</nav>
+<div class="container">
 
-<main>
-
-<!-- ══════════════════════════════════════════ OVERVIEW ══ -->
-<section class="tab-panel active" id="tab-overview">
+  <!-- ===== TOP KPI CARDS ===== -->
   <div class="kpi-grid">
-    <div class="kpi-card forest">
-      <div class="kpi-label">2026 Closings YTD</div>
-      <div class="kpi-value">13</div>
-      <div class="kpi-sub">Through April 2026</div>
-    </div>
-    <div class="kpi-card tan">
-      <div class="kpi-label">2026 Sales Volume</div>
-      <div class="kpi-value">$9.1M</div>
-      <div class="kpi-sub">Total closed volume</div>
-    </div>
     <div class="kpi-card">
-      <div class="kpi-label">2026 Referrals YTD</div>
-      <div class="kpi-value">35</div>
-      <div class="kpi-sub">Goal: 100 for year</div>
-      <span class="kpi-badge neu">35% to goal</span>
+      <div class="label">Team Sales Volume YTD</div>
+      <div class="value">$13.2M</div>
+      <div class="sub">Goal: $30M · 44.0% to goal</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:44.0%"></div></div>
     </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Avg Close Price</div>
-      <div class="kpi-value">$699K</div>
-      <div class="kpi-sub">2026 YTD</div>
+    <div class="kpi-card green">
+      <div class="label">Transactions YTD</div>
+      <div class="value">19</div>
+      <div class="sub">9 Seller · 10 Buyer</div>
     </div>
-    <div class="kpi-card blush">
-      <div class="kpi-label">Testimonials</div>
-      <div class="kpi-value">10</div>
-      <div class="kpi-sub">Goal: 52 for year</div>
-      <span class="kpi-badge neg">19% to goal</span>
+    <div class="kpi-card orange">
+      <div class="label">Referrals YTD</div>
+      <div class="value">46</div>
+      <div class="sub">Goal: 103 · 44.7% to goal</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:44.7%;background:#dd6b20"></div></div>
     </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Calls / Texts YTD</div>
-      <div class="kpi-value">622</div>
-      <div class="kpi-sub">Goal: 520 · Exceeded ✓</div>
-      <span class="kpi-badge pos">120% of goal</span>
+    <div class="kpi-card purple">
+      <div class="label">Lorin Production YTD</div>
+      <div class="value">$1.21M</div>
+      <div class="sub">2 transactions (buyer)</div>
     </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Buyer Sides</div>
-      <div class="kpi-value">7</div>
-      <div class="kpi-sub">2026 closings</div>
-    </div>
-    <div class="kpi-card terra">
-      <div class="kpi-label">Seller Sides</div>
-      <div class="kpi-value">6</div>
-      <div class="kpi-sub">2026 closings</div>
+    <div class="kpi-card teal">
+      <div class="label">Testimonials YTD</div>
+      <div class="value">8</div>
+      <div class="sub">Goal: 43 · 18.6% to goal · 42% of transactions</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:18.6%;background:#319795"></div></div>
     </div>
   </div>
 
-  <div class="chart-grid-2">
-    <div class="chart-card">
-      <div class="chart-title">Referrals — 2024 vs 2025 vs 2026</div>
-      <canvas id="referralComboChart" height="240"></canvas>
+  <!-- ===== REFERRAL MONTHLY TABLE + SOURCES ===== -->
+  <div class="section-grid wide" style="margin-bottom:20px;">
+    <div class="card">
+      <h2>Monthly Referral Tracker</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>2024</th>
+            <th>2025</th>
+            <th>2026 Goal</th>
+            <th>2026 Actual</th>
+            <th>Variance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>January</td><td>8</td><td>10</td><td>10</td><td>11</td><td><span class="badge over">+1</span></td></tr>
+          <tr><td>February</td><td>11</td><td>5</td><td>7</td><td>11</td><td><span class="badge over">+4</span></td></tr>
+          <tr><td>March</td><td>10</td><td>9</td><td>11</td><td>9</td><td><span class="badge under">−2</span></td></tr>
+          <tr><td>April</td><td>11</td><td>8</td><td>10</td><td>5</td><td><span class="badge under">−5</span></td></tr>
+          <tr><td>May</td><td>6</td><td>4</td><td>9</td><td>11</td><td><span class="badge over">+2</span></td></tr>
+          <tr><td>June</td><td>10</td><td>4</td><td>6</td><td>—</td><td><span class="badge future">—</span></td></tr>
+          <tr><td>July</td><td>8</td><td>5</td><td>7</td><td>—</td><td><span class="badge future">—</span></td></tr>
+          <tr><td>August</td><td>8</td><td>8</td><td>10</td><td>—</td><td><span class="badge future">—</span></td></tr>
+          <tr><td>September</td><td>6</td><td>6</td><td>10</td><td>—</td><td><span class="badge future">—</span></td></tr>
+          <tr><td>October</td><td>7</td><td>7</td><td>10</td><td>—</td><td><span class="badge future">—</span></td></tr>
+          <tr><td>November</td><td>6</td><td>1</td><td>6</td><td>—</td><td><span class="badge future">—</span></td></tr>
+          <tr><td>December</td><td>7</td><td>2</td><td>4</td><td>—</td><td><span class="badge future">—</span></td></tr>
+          <tr><td>TOTAL</td><td>98</td><td>69</td><td>103</td><td>46</td><td></td></tr>
+        </tbody>
+      </table>
     </div>
-    <div class="chart-card">
-      <div class="chart-title">2026 YTD Referral Sources</div>
-      <canvas id="sourceDonut2026" height="240"></canvas>
-    </div>
-  </div>
-</section>
 
-<!-- ════════════════════════════════════════ 2025 PRODUCTION ══ -->
-<section class="tab-panel" id="tab-prod2025">
-  <p class="section-heading">2025 Production Summary</p>
-
-  <div class="kpi-grid">
-    <div class="kpi-card forest">
-      <div class="kpi-label">Total 2025 Volume</div>
-      <div class="kpi-value">$23.4M</div>
-      <div class="kpi-sub">All sides combined</div>
-    </div>
-    <div class="kpi-card blush">
-      <div class="kpi-label">2025 Goal</div>
-      <div class="kpi-value">$35M</div>
-      <div class="kpi-sub">$11.6M short</div>
-      <span class="kpi-badge neg">67% of goal</span>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Q1 Volume</div>
-      <div class="kpi-value">$4.3M</div>
-      <div class="kpi-sub">Jan–Mar 2025</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Q2 Volume</div>
-      <div class="kpi-value">$8.3M</div>
-      <div class="kpi-sub">Apr–Jun 2025 (best quarter)</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Q3 Volume</div>
-      <div class="kpi-value">$6.0M</div>
-      <div class="kpi-sub">Jul–Sep 2025</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Q4 Volume</div>
-      <div class="kpi-value">$4.8M</div>
-      <div class="kpi-sub">Oct–Dec 2025</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Total Closings</div>
-      <div class="kpi-value">28</div>
-      <div class="kpi-sub">Full year 2025</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Avg Close Price</div>
-      <div class="kpi-value">$836K</div>
-      <div class="kpi-sub">2025 average</div>
-    </div>
-  </div>
-
-  <div class="chart-grid-2">
-    <div class="chart-card">
-      <div class="chart-title">2025 Cumulative Volume vs $35M Goal Pace</div>
-      <canvas id="qtrGoalChart" height="260"></canvas>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">2025 Sales Volume by Quarter</div>
-      <canvas id="volumeByQtr" height="260"></canvas>
-    </div>
-  </div>
-
-  <div class="chart-grid-2">
-    <div class="chart-card">
-      <div class="chart-title">2025 Buyer vs Seller Sides by Quarter</div>
-      <canvas id="buyerSellerBar" height="240"></canvas>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">2024 Volume by Month</div>
-      <canvas id="vol2024Monthly" height="240"></canvas>
-    </div>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════ 2026 PRODUCTION ══ -->
-<section class="tab-panel" id="tab-prod2026">
-  <p class="section-heading">Agent Production — 2026 YTD</p>
-
-  <div class="kpi-grid">
-    <div class="kpi-card forest">
-      <div class="kpi-label">2026 Closings YTD</div>
-      <div class="kpi-value">13</div>
-      <div class="kpi-sub">Through April 2026</div>
-    </div>
-    <div class="kpi-card tan">
-      <div class="kpi-label">Total Volume</div>
-      <div class="kpi-value">$9.1M</div>
-      <div class="kpi-sub">All sides combined</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Avg Close Price</div>
-      <div class="kpi-value">$699K</div>
-      <div class="kpi-sub">2026 YTD</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Buyer Sides</div>
-      <div class="kpi-value">7</div>
-      <div class="kpi-sub">2026 closings</div>
-    </div>
-    <div class="kpi-card terra">
-      <div class="kpi-label">Seller Sides</div>
-      <div class="kpi-value">6</div>
-      <div class="kpi-sub">2026 closings</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Property Types</div>
-      <div class="kpi-value">12 SF</div>
-      <div class="kpi-sub">+ 1 Condo</div>
+    <div class="card">
+      <h2>2026 Referral Sources</h2>
+      <ul class="source-list">
+        <li>
+          <span class="source-name">Client Referral</span>
+          <div class="source-bar-wrap"><div class="source-bar" style="width:100%"></div></div>
+          <span class="source-count">16</span>
+        </li>
+        <li>
+          <span class="source-name">Repeat Client</span>
+          <div class="source-bar-wrap"><div class="source-bar" style="width:43.75%"></div></div>
+          <span class="source-count">7</span>
+        </li>
+        <li>
+          <span class="source-name">Realtor Referral</span>
+          <div class="source-bar-wrap"><div class="source-bar" style="width:43.75%"></div></div>
+          <span class="source-count">7</span>
+        </li>
+        <li>
+          <span class="source-name">Realty Austin</span>
+          <div class="source-bar-wrap"><div class="source-bar" style="width:31.25%"></div></div>
+          <span class="source-count">5</span>
+        </li>
+        <li>
+          <span class="source-name">SOI (not past client)</span>
+          <div class="source-bar-wrap"><div class="source-bar" style="width:31.25%"></div></div>
+          <span class="source-count">5</span>
+        </li>
+        <li>
+          <span class="source-name">Google</span>
+          <div class="source-bar-wrap"><div class="source-bar" style="width:12.5%"></div></div>
+          <span class="source-count">2</span>
+        </li>
+        <li>
+          <span class="source-name">Instagram</span>
+          <div class="source-bar-wrap"><div class="source-bar" style="width:12.5%"></div></div>
+          <span class="source-count">2</span>
+        </li>
+        <li>
+          <span class="source-name">Compass</span>
+          <div class="source-bar-wrap"><div class="source-bar" style="width:12.5%"></div></div>
+          <span class="source-count">2</span>
+        </li>
+        <li>
+          <span class="source-name">Doorknocking</span>
+          <div class="source-bar-wrap"><div class="source-bar" style="width:6.25%"></div></div>
+          <span class="source-count">1</span>
+        </li>
+        <li>
+          <span class="source-name">Sign Call</span>
+          <div class="source-bar-wrap"><div class="source-bar" style="width:6.25%"></div></div>
+          <span class="source-count">1</span>
+        </li>
+        <li>
+          <span class="source-name">Lender Referral</span>
+          <div class="source-bar-wrap"><div class="source-bar" style="width:6.25%"></div></div>
+          <span class="source-count">1</span>
+        </li>
+      </ul>
+      <div style="margin-top:14px; padding-top:12px; border-top:2px solid #e2e8f0; display:flex; justify-content:space-between; font-size:0.85rem;">
+        <strong>Total</strong><strong>49</strong>
+      </div>
     </div>
   </div>
 
-  <div class="agent-grid">
-    <div class="agent-card">
-      <div class="agent-name">Ashley · AB</div>
-      <div class="agent-stat"><span class="agent-stat-label">Closings</span><span class="agent-stat-val">6</span></div>
-      <div class="agent-stat"><span class="agent-stat-label">Volume</span><span class="agent-stat-val">$4,102,900</span></div>
-      <div class="agent-stat"><span class="agent-stat-label">Avg Price</span><span class="agent-stat-val">$683,817</span></div>
-      <div class="agent-stat"><span class="agent-stat-label">Primary Side</span><span class="agent-stat-val">Seller</span></div>
+  <!-- ===== CHARTS ROW ===== -->
+  <div class="section-grid" style="margin-bottom:20px;">
+    <div class="card">
+      <h2>Referral Trend: 2024 vs 2025 vs 2026</h2>
+      <div class="chart-wrap">
+        <canvas id="referralChart" height="200"></canvas>
+      </div>
     </div>
-    <div class="agent-card">
-      <div class="agent-name">Lorin · LM</div>
-      <div class="agent-stat"><span class="agent-stat-label">Closings</span><span class="agent-stat-val">7</span></div>
-      <div class="agent-stat"><span class="agent-stat-label">Volume</span><span class="agent-stat-val">$5,019,451</span></div>
-      <div class="agent-stat"><span class="agent-stat-label">Avg Price</span><span class="agent-stat-val">$717,064</span></div>
-      <div class="agent-stat"><span class="agent-stat-label">Primary Side</span><span class="agent-stat-val">Buyer</span></div>
-    </div>
-    <div class="agent-card">
-      <div class="agent-name">Team Total</div>
-      <div class="agent-stat"><span class="agent-stat-label">Closings</span><span class="agent-stat-val">13</span></div>
-      <div class="agent-stat"><span class="agent-stat-label">Total Volume</span><span class="agent-stat-val">$9,094,451</span></div>
-      <div class="agent-stat"><span class="agent-stat-label">Avg Price</span><span class="agent-stat-val">$699,573</span></div>
-      <div class="agent-stat"><span class="agent-stat-label">Types</span><span class="agent-stat-val">12 SF · 1 Condo</span></div>
+    <div class="card">
+      <h2>Sales Volume by Month (2026 Closed)</h2>
+      <div class="chart-wrap">
+        <canvas id="volumeChart" height="200"></canvas>
+      </div>
     </div>
   </div>
 
-  <div class="chart-grid-2" style="margin-bottom:22px">
-    <div class="chart-card">
-      <div class="chart-title">2026 Closings by Month &amp; Agent</div>
-      <canvas id="agentMonthly2026" height="220"></canvas>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Volume by Month — 2026</div>
-      <canvas id="vol2026Monthly" height="220"></canvas>
-    </div>
-  </div>
-
-  <p class="section-heading">2026 Closed Transactions</p>
-  <div class="table-card">
-    <table>
+  <!-- ===== TRANSACTIONS TABLE ===== -->
+  <div class="card" style="margin-bottom:20px;">
+    <h2>2026 Closed Transactions</h2>
+    <table class="tx-table">
       <thead>
         <tr>
-          <th>Close Date</th>
-          <th>Address</th>
-          <th>Agent</th>
+          <th style="text-align:left">Close Date</th>
+          <th style="text-align:left">Address</th>
+          <th>Type</th>
           <th>Side</th>
-          <th>Property Type</th>
+          <th>Property</th>
           <th>Close Price</th>
+          <th>Agent</th>
         </tr>
       </thead>
-      <tbody id="closings2026Body"></tbody>
+      <tbody>
+        <tr><td>2/4/2026</td><td>4022 N Hills</td><td>Sale</td><td><span class="tag seller">Seller</span></td><td>SFH</td><td>$1,900,000</td><td>AB</td></tr>
+        <tr><td>2/4/2026</td><td>201 Nathaniel Dr</td><td>Sale</td><td><span class="tag buyer">Buyer</span></td><td>SFH</td><td>$269,000</td><td>LM</td></tr>
+        <tr><td>2/12/2026</td><td>400 W Alpine Rd</td><td>Sale</td><td><span class="tag buyer">Buyer</span></td><td>SFH</td><td>$916,000</td><td>LM</td></tr>
+        <tr><td>2/26/2026</td><td>6804 Bayridge Ter</td><td>Sale</td><td><span class="tag buyer">Buyer</span></td><td>SFH</td><td>$715,000</td><td>LM</td></tr>
+        <tr><td>3/4/2026</td><td>2703 Gettysburg Dr</td><td>Sale</td><td><span class="tag buyer">Buyer</span></td><td>SFH</td><td>$684,000</td><td>LM</td></tr>
+        <tr><td>3/24/2026</td><td>5908 Taylor Draper Cove</td><td>Sale</td><td><span class="tag buyer">Buyer</span></td><td>SFH</td><td>$923,000</td><td>LM</td></tr>
+        <tr><td>3/25/2026</td><td>2102 E 2nd St, Unit 1</td><td>Sale</td><td><span class="tag seller">Seller</span></td><td>Condo</td><td>$925,000</td><td>AB</td></tr>
+        <tr><td>3/26/2026</td><td>14913 Spillman Ranch Loop</td><td>Sale</td><td><span class="tag seller">Seller</span></td><td>SFH</td><td>$1,075,000</td><td>AB</td></tr>
+        <tr><td>3/31/2026</td><td>1703 Dywer Ave</td><td>Sale</td><td><span class="tag buyer">Buyer</span></td><td>SFH</td><td>$959,951</td><td>LM</td></tr>
+        <tr><td>4/15/2026</td><td>1705 Sylvia Ln</td><td>Sale</td><td><span class="tag seller">Seller</span></td><td>SFH</td><td>$298,900</td><td>AB</td></tr>
+        <tr><td>4/16/2026</td><td>12802 Bivins Ct</td><td>Sale</td><td><span class="tag buyer">Buyer</span></td><td>SFH</td><td>$645,000</td><td>LM</td></tr>
+        <tr><td>4/23/2026</td><td>7404 Barcelona Dr</td><td>Sale</td><td><span class="tag seller">Seller</span></td><td>SFH</td><td>$499,000</td><td>AB</td></tr>
+        <tr><td>4/24/2026</td><td>11900 Oakbrook Dr</td><td>Sale</td><td><span class="tag seller">Seller</span></td><td>SFH</td><td>$405,000</td><td>AB</td></tr>
+        <tr><td>4/29/2026</td><td>1000 Arcadia Ave</td><td>Sale</td><td><span class="tag buyer">Buyer</span></td><td>SFH</td><td>$647,500</td><td>LM</td></tr>
+        <tr><td>5/1/2026</td><td>8600 Azalea Trail</td><td>Sale</td><td><span class="tag seller">Seller</span></td><td>SFH</td><td>$900,000</td><td>AB</td></tr>
+        <tr><td>5/1/2026</td><td>4200 Bluffridge Dr</td><td>Sale</td><td><span class="tag buyer">Buyer</span></td><td>SFH</td><td>$1,275,000</td><td>AB</td></tr>
+        <tr><td>5/12/2026</td><td>20506 Dawn Dr</td><td>Sale</td><td><span class="tag buyer">Buyer</span></td><td>SFH</td><td>$295,000</td><td>LM</td></tr>
+        <tr><td>5/20/2026</td><td>2502 Leon St, Unit 512</td><td>Sale</td><td><span class="tag seller">Seller</span></td><td>Condo</td><td>$487,000</td><td>AB</td></tr>
+        <tr><td>5/29/2026</td><td>902 Ripperton Run</td><td>Sale</td><td><span class="tag seller">Seller</span></td><td>SFH</td><td>$606,000</td><td>AB</td></tr>
+        <tr><td>5/29/2026</td><td>E 14th St</td><td>Sale</td><td><span class="tag seller">Seller</span></td><td>Condo</td><td>$690,000</td><td>AB</td></tr>
+        <tr>
+          <td colspan="5"><strong>Total</strong></td>
+          <td><strong>$13,214,351</strong></td>
+          <td></td>
+        </tr>
+      </tbody>
     </table>
   </div>
 
-  <div class="chart-card" style="margin-bottom:22px">
-    <div class="chart-title">Close Price Distribution — 2026</div>
-    <canvas id="closePriceBar" height="200"></canvas>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════ 2025 vs 2026 ══ -->
-<section class="tab-panel" id="tab-compare">
-  <p class="section-heading">2025 vs 2026 — Historical Comparison</p>
-
-  <div class="compare-header">
-    <div class="compare-col-label y2025">2025 Full Year</div>
-    <div class="compare-col-label y2026">2026 YTD (Jan–Apr)</div>
-  </div>
-
-  <div class="compare-kpi-row">
-    <div class="kpi-grid" style="margin-bottom:0">
-      <div class="kpi-card forest">
-        <div class="kpi-label">Total Volume</div>
-        <div class="kpi-value">$23.4M</div>
-        <div class="kpi-sub">All sides · Full year</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Total Closings</div>
-        <div class="kpi-value">28</div>
-        <div class="kpi-sub">Full year 2025</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Avg Close Price</div>
-        <div class="kpi-value">$836K</div>
-        <div class="kpi-sub">2025 average</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Referrals</div>
-        <div class="kpi-value">69</div>
-        <div class="kpi-sub">Full year 2025</div>
+  <!-- ===== YEAR COMPARISON ===== -->
+  <div class="section-grid three" style="margin-bottom:20px;">
+    <div class="card">
+      <h2>2024 Full Year</h2>
+      <div style="font-size:0.88rem; line-height:1.9;">
+        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #f0f0f0;padding:4px 0"><span>Sales Volume</span><strong>$30.4M</strong></div>
+        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #f0f0f0;padding:4px 0"><span>Transactions</span><strong>65+</strong></div>
+        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #f0f0f0;padding:4px 0"><span>Referrals</span><strong>98</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0"><span>Testimonials</span><strong>10</strong></div>
       </div>
     </div>
-    <div class="kpi-grid" style="margin-bottom:0">
-      <div class="kpi-card tan">
-        <div class="kpi-label">Total Volume</div>
-        <div class="kpi-value">$9.1M</div>
-        <div class="kpi-sub">4 months YTD</div>
+    <div class="card">
+      <h2>2025 Full Year</h2>
+      <div style="font-size:0.88rem; line-height:1.9;">
+        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #f0f0f0;padding:4px 0"><span>Sales Volume</span><strong>$23.4M</strong></div>
+        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #f0f0f0;padding:4px 0"><span>Transactions</span><strong>33</strong></div>
+        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #f0f0f0;padding:4px 0"><span>Referrals</span><strong>69</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0"><span>Q4 Volume</span><strong>$4.8M</strong></div>
       </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Total Closings</div>
-        <div class="kpi-value">13</div>
-        <div class="kpi-sub">4 months YTD</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Avg Close Price</div>
-        <div class="kpi-value">$699K</div>
-        <div class="kpi-sub">2026 YTD average</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Referrals</div>
-        <div class="kpi-value">35</div>
-        <div class="kpi-sub">4 months YTD</div>
+    </div>
+    <div class="card" style="border: 2px solid #3182ce;">
+      <h2>2026 YTD (thru May)</h2>
+      <div style="font-size:0.88rem; line-height:1.9;">
+        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #f0f0f0;padding:4px 0"><span>Team Volume</span><strong style="color:#3182ce">$13.2M</strong></div>
+        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #f0f0f0;padding:4px 0"><span>Transactions</span><strong style="color:#3182ce">19</strong></div>
+        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #f0f0f0;padding:4px 0"><span>Referrals</span><strong style="color:#3182ce">46</strong></div>
+        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #f0f0f0;padding:4px 0"><span>Testimonials</span><strong style="color:#3182ce">8</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0"><span>Goal</span><strong style="color:#3182ce">$30M</strong></div>
       </div>
     </div>
   </div>
 
-  <div class="chart-grid-2" style="margin-top:22px">
-    <div class="chart-card">
-      <div class="chart-title">Volume by Quarter — 2025 vs 2026 Pace</div>
-      <canvas id="compareVolumeChart" height="260"></canvas>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Monthly Referrals — 2025 vs 2026</div>
-      <canvas id="compareRefChart" height="260"></canvas>
-    </div>
-  </div>
+</div><!-- /container -->
 
-  <div class="chart-grid-2">
-    <div class="chart-card">
-      <div class="chart-title">Buyer vs Seller Sides — 2025 Full Year vs 2026 YTD</div>
-      <canvas id="compareSidesChart" height="240"></canvas>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Avg Close Price Trend — 2025 Quarters vs 2026 Months</div>
-      <canvas id="compareAvgPriceChart" height="240"></canvas>
-    </div>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════ REFERRALS ══ -->
-<section class="tab-panel" id="tab-referrals">
-  <p class="section-heading">Referral Pipeline — 2026</p>
-
-  <div class="kpi-grid">
-    <div class="kpi-card">
-      <div class="kpi-label">January</div>
-      <div class="kpi-value">10</div>
-      <div class="kpi-sub">Goal: 10 · On target</div>
-      <span class="kpi-badge pos">✓ Met</span>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">February</div>
-      <div class="kpi-value">11</div>
-      <div class="kpi-sub">Goal: 10 · +1 over</div>
-      <span class="kpi-badge pos">+10%</span>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">March</div>
-      <div class="kpi-value">9</div>
-      <div class="kpi-sub">Goal: 11 · -2</div>
-      <span class="kpi-badge neg">-2 vs goal</span>
-    </div>
-    <div class="kpi-card blush">
-      <div class="kpi-label">April</div>
-      <div class="kpi-value">5</div>
-      <div class="kpi-sub">Goal: 10 · -5</div>
-      <span class="kpi-badge neg">-5 vs goal</span>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Avg Days to Close</div>
-      <div class="kpi-value">164</div>
-      <div class="kpi-sub">Historical average</div>
-    </div>
-    <div class="kpi-card forest">
-      <div class="kpi-label">Total YTD</div>
-      <div class="kpi-value">35</div>
-      <div class="kpi-sub">of 100 annual goal</div>
-      <span class="kpi-badge neu">35% there</span>
-    </div>
-  </div>
-
-  <div class="source-grid">
-    <div class="chart-card">
-      <div class="chart-title">2025 Referral Sources — Full Year</div>
-      <canvas id="sourcePie2025" height="280"></canvas>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">2026 YTD Referral Sources</div>
-      <canvas id="sourceDonut2026Ref" height="280"></canvas>
-    </div>
-  </div>
-
-  <div class="chart-card" style="margin-bottom:22px">
-    <div class="chart-title">Monthly Referrals — 2024 vs 2025 vs 2026</div>
-    <canvas id="refMonthlyLine" height="220"></canvas>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════ ACTIVITY ══ -->
-<section class="tab-panel" id="tab-activity">
-  <p class="section-heading">Team Activity KPIs — 2025 vs Goals</p>
-  <div class="activity-grid" id="activityGrid"></div>
-
-  <div class="chart-grid-2">
-    <div class="chart-card">
-      <div class="chart-title">Weekly Calls &amp; Texts — 2025</div>
-      <canvas id="callsChart" height="240"></canvas>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Weekly Showings — 2025</div>
-      <canvas id="showingsChart" height="240"></canvas>
-    </div>
-  </div>
-</section>
-
-</main>
-<footer>Brinkman Team &nbsp;·&nbsp; Compass &nbsp;·&nbsp; Austin, TX</footer>
+<footer>Brinkman Team · Austin, TX · Dashboard updated June 2026</footer>
 
 <script>
-// ══════════════════ DATA ══════════════════
-const closings2026 = [
-  { date:'Feb 4',   addr:'4022 N Hills Dr',           agent:'AB', side:'Seller', type:'Single Family', price:1900000, mo:'Feb' },
-  { date:'Feb 4',   addr:'201 Nathaniel Dr',           agent:'LM', side:'Buyer',  type:'Single Family', price:269000,  mo:'Feb' },
-  { date:'Feb 26',  addr:'6804 Bayridge Ter',          agent:'LM', side:'Buyer',  type:'Single Family', price:715000,  mo:'Feb' },
-  { date:'Mar 4',   addr:'2703 Gettysburg Dr',         agent:'LM', side:'Buyer',  type:'Single Family', price:684000,  mo:'Mar' },
-  { date:'Mar 24',  addr:'5908 Taylor Draper Cove',    agent:'LM', side:'Buyer',  type:'Single Family', price:923000,  mo:'Mar' },
-  { date:'Mar 25',  addr:'2102 E 2nd St Unit 1',       agent:'AB', side:'Seller', type:'Condo',         price:925000,  mo:'Mar' },
-  { date:'Mar 26',  addr:'14913 Spillman Ranch Loop',  agent:'AB', side:'Seller', type:'Single Family', price:1075000, mo:'Mar' },
-  { date:'Mar 31',  addr:'1703 Dwyer Ave',             agent:'LM', side:'Buyer',  type:'Single Family', price:959951,  mo:'Mar' },
-  { date:'Apr 15',  addr:'1705 Sylvia Ln',             agent:'AB', side:'Seller', type:'Single Family', price:298900,  mo:'Apr' },
-  { date:'Apr 16',  addr:'12802 Bivins Ct',            agent:'LM', side:'Buyer',  type:'Single Family', price:645000,  mo:'Apr' },
-  { date:'Apr 23',  addr:'7404 Barcelona Dr',          agent:'AB', side:'Seller', type:'Single Family', price:499000,  mo:'Apr' },
-  { date:'Apr 24',  addr:'11900 Oakbrook Dr',          agent:'AB', side:'Seller', type:'Single Family', price:405000,  mo:'Apr' },
-  { date:'Apr 29',  addr:'1000 Arcadia Ave',           agent:'LM', side:'Buyer',  type:'Single Family', price:647500,  mo:'Apr' },
-];
-
-const referrals2026 = [
-  { date:'1.5',  name:'Hailey Hobren',           agent:'LM', source:'Repeat Client',    ref:'Self' },
-  { date:'1.8',  name:'Lacy R',                  agent:'LM', source:'Client Referral',  ref:'Stella Masterson' },
-  { date:'1.10', name:'Tiffany Hardt',            agent:'AB', source:'Repeat Client',    ref:'Self' },
-  { date:'1.10', name:'Cory Wren',                agent:'LM', source:'Client Referral',  ref:'Trina Pruit' },
-  { date:'1.12', name:'Joyce Hung',               agent:'AB', source:'Google',           ref:'Self' },
-  { date:'1.12', name:'Nathan Booker',            agent:'AB', source:'Client Referral',  ref:'Kasey/Stevie Huval' },
-  { date:'1.14', name:'Adriana Siu De Olaso',     agent:'AB', source:'Google',           ref:'Self' },
-  { date:'1.18', name:'Pam & David Pineck',       agent:'AB', source:'Doorknocking',     ref:'Self' },
-  { date:'1.21', name:'Benito Garcia',            agent:'LM', source:'Client Referral',  ref:'Self' },
-  { date:'1.21', name:'Sud Prassana',             agent:'AB', source:'Realty Austin',    ref:'Self' },
-  { date:'1.28', name:'Jen & Matt Daniel',        agent:'LM', source:'Repeat Client',    ref:'Self' },
-  { date:'2.6',  name:"Christopher O'Neil",       agent:'AB', source:'Instagram',        ref:'Self' },
-  { date:'2.6',  name:'Amanda',                   agent:'—',  source:'Realtor Referral', ref:'Pam Breen' },
-  { date:'2.6',  name:'Mary McKeever',            agent:'LM', source:'Client Referral',  ref:'Brad Alsheskie' },
-  { date:'2.6',  name:'Kristin & Henrique',       agent:'LM', source:'Client Referral',  ref:'Bailey Atkins' },
-  { date:'2.9',  name:'Danielle Hamby',           agent:'AB', source:'Repeat Client',    ref:'Self' },
-  { date:'2.9',  name:'Samantha & Kevin Duerr',   agent:'LM', source:'Repeat Client',    ref:'Self' },
-  { date:'2.10', name:'Tasha Lively',             agent:'LM', source:'Client Referral',  ref:'Lucas Walfrep' },
-  { date:'2.21', name:'Olivia (Brompton)',         agent:'LM', source:'Compass',          ref:'Self' },
-  { date:'2.21', name:'James Geoffrey (Leon)',     agent:'LM', source:'Compass',          ref:'Self' },
-  { date:'2.18', name:'Josh Calloway',            agent:'AB', source:'Client Referral',  ref:'Mario Hernandez' },
-  { date:'2.23', name:'Chance Windham',           agent:'AB', source:'Client Referral',  ref:'Self' },
-  { date:'3.3',  name:'Emily Garcia',             agent:'LM', source:'Client Referral',  ref:'Stella Masterson' },
-  { date:'3.5',  name:'Jeff Sisco',               agent:'LM', source:'Unknown',          ref:'?' },
-  { date:'3.10', name:'Darrell & Polly Wenglar',  agent:'—',  source:'Realtor Referral', ref:'Brad Countryman' },
-  { date:'3.19', name:'Michael Haddad',           agent:'—',  source:'Sign Call',        ref:'Brompton sign' },
-  { date:'3.22', name:'Nyla Litalien',            agent:'AB', source:'Realty Austin',    ref:'Self' },
-  { date:'3.24', name:'Dolly Golden',             agent:'LM', source:'Client Referral',  ref:'Sarah Marsh' },
-  { date:'3.25', name:'Keri Lemmond & Bryan W',   agent:'LM', source:'Realty Austin',    ref:'Self' },
-  { date:'3.26', name:'Kurnal & Pinaliben Patel', agent:'AB', source:'Realty Austin',    ref:'Attorney' },
-  { date:'3.30', name:'Mabel Rivera',             agent:'AB', source:'Realty Austin',    ref:'Self' },
-  { date:'3.31', name:'Mitch R & Mackenzie W',    agent:'LM', source:'SOI',              ref:'Self' },
-  { date:'4.1',  name:'Matt Russell & Erinn L',   agent:'LM', source:'Realtor Referral', ref:'Lizzy Confalone' },
-  { date:'4.3',  name:'Katherine & Chase Davidson',agent:'LM',source:'Client Referral',  ref:'Kelsey Lyles' },
-  { date:'4.3',  name:'Katy McBride/Justin B',    agent:'AB', source:'SOI',              ref:'Self' },
-  { date:'4.17', name:'Keith Kurtz',              agent:'AB', source:'Client Referral',  ref:'Sara Wright' },
-  { date:'4.20', name:'Leigh Vercher',            agent:'LM', source:'SOI',              ref:'Self' },
-];
-
-const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const ref2024 = [8,11,10,11,6,10,8,8,6,7,6,7];
-const ref2025 = [10,5,9,8,4,4,5,8,6,7,1,2];
-const refGoal2026 = [10,10,11,10,9,6,7,10,10,10,6,4];
-const ref2026actual = [10,11,9,5];
-
-const activityData = [
-  { label:'Buyer Presentations', actual:22,  goal:40  },
-  { label:'Referrals Received',  actual:26,  goal:100 },
-  { label:'# of Showings',       actual:181, goal:380 },
-  { label:'Offers Written',      actual:22,  goal:40  },
-  { label:'Offers Accepted',     actual:13,  goal:40  },
-  { label:'Client Meet-ups',     actual:96,  goal:100 },
-  { label:'Action Plan Enroll.', actual:112, goal:150 },
-  { label:'Annual Reviews Sent', actual:15,  goal:328 },
-  { label:'Handwritten Notes',   actual:110, goal:208 },
-  { label:'Calls / Texts',       actual:622, goal:520 },
-  { label:'Open Houses',         actual:5,   goal:10  },
-  { label:"Testimonials Rec'd",  actual:33,  goal:50  },
-  { label:'Birthday Notes',      actual:188, goal:420 },
-  { label:'Anniversary Notes',   actual:67,  goal:100 },
-];
-
-const src2025 = [
-  { source:'Client Referral', val:26 },
-  { source:'Repeat Client',   val:16 },
-  { source:'YouTube',         val:5  },
-  { source:'Realtor Referral',val:5  },
-  { source:'SOI',             val:5  },
-  { source:'Instagram',       val:3  },
-  { source:'Realty Austin',   val:3  },
-  { source:'Google',          val:2  },
-  { source:'Compass',         val:2  },
-  { source:'Lender Referral', val:1  },
-  { source:'Sign Call',       val:1  },
-];
-
-// ══════════════════ BRAND COLORS ══════════════════
-const C = {
-  forest:  '#32462a',
-  sage:    '#c1c19a',
-  teal:    '#829987',
-  silver:  '#bbbcb7',
-  cream:   '#f3ebe2',
-  tan:     '#bea17f',
-  blush:   '#e6cfc7',
-  terra:   '#d6a58a',
-  white:   '#faf8f4',
-  olive:   '#71695b',
-};
-const PALETTE = [C.teal, C.tan, C.terra, C.sage, C.blush, C.olive, C.forest, C.silver, '#a8b89a', '#c4a882'];
-
-Chart.defaults.color        = C.olive;
-Chart.defaults.borderColor  = 'rgba(50,70,42,0.10)';
-Chart.defaults.font.family  = "'Jost', sans-serif";
-Chart.defaults.font.size    = 12;
-
-const fmt = n => n >= 1e6 ? '$'+(n/1e6).toFixed(1)+'M' : n >= 1e3 ? '$'+(n/1e3).toFixed(0)+'K' : '$'+n;
-
-function showTab(id, el) {
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  el.classList.add('active');
-}
-
-// ══════════════════ TABLES ══════════════════
-function buildClosingsTable() {
-  const tbody = document.getElementById('closings2026Body');
-  closings2026.forEach(c => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td style="color:var(--text-muted);font-size:12px">${c.date}</td>
-      <td style="font-weight:500">${c.addr}</td>
-      <td><span class="pill ${c.agent === 'LM' ? 'lm' : 'ab'}">${c.agent}</span></td>
-      <td><span class="pill ${c.side === 'Buyer' ? 'buyer' : 'seller'}">${c.side}</span></td>
-      <td style="color:var(--text-muted)">${c.type}</td>
-      <td style="font-weight:600;font-family:'Cormorant Garamond',serif;font-size:16px">${fmt(c.price)}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-function buildActivityGrid() {
-  const grid = document.getElementById('activityGrid');
-  activityData.forEach(a => {
-    const pct   = Math.min(Math.round(a.actual / a.goal * 100), 100);
-    const cls   = pct >= 100 ? 'over' : pct >= 60 ? 'good' : 'warn';
-    const label = pct >= 100 ? '✓ Goal met' : `${pct}% of goal`;
-    const div = document.createElement('div');
-    div.className = 'activity-item';
-    div.innerHTML = `
-      <div class="progress-wrap">
-        <div class="progress-top">
-          <span class="progress-label">${a.label}</span>
-          <span class="progress-nums">${a.actual.toLocaleString()} / ${a.goal.toLocaleString()}</span>
-        </div>
-        <div class="progress-bar-bg">
-          <div class="progress-bar-fill ${cls}" style="width:${pct}%"></div>
-        </div>
-      </div>
-      <div class="activity-pct" style="color:${pct>=100?C.teal:pct>=60?C.olive:'#b06b45'}">${label}</div>
-    `;
-    grid.appendChild(div);
-  });
-}
-
-// ══════════════════ CHARTS ══════════════════
-function initCharts() {
-  const gridLine = 'rgba(50,70,42,0.08)';
-  const baseScales = {
-    x: { grid:{ color:gridLine } },
-    y: { grid:{ color:gridLine }, beginAtZero:true }
-  };
-
-  // ── OVERVIEW ──
-  new Chart('referralComboChart', {
-    type:'bar',
-    data:{
-      labels: months,
-      datasets:[
-        { label:'2024', data:ref2024, backgroundColor:C.sage+'99', borderColor:C.sage, borderWidth:1.5, borderRadius:4 },
-        { label:'2025', data:ref2025, backgroundColor:C.teal+'99', borderColor:C.teal, borderWidth:1.5, borderRadius:4 },
-        { label:'2026 Goal', data:refGoal2026, type:'line', borderColor:C.tan, backgroundColor:'transparent', borderDash:[5,4], pointRadius:3, tension:0.3 },
-        { label:'2026 Actual', data:[...ref2026actual,...Array(8).fill(null)], type:'line', borderColor:C.terra, backgroundColor:'transparent', borderWidth:2.5, pointRadius:4, tension:0.3 },
-      ]
-    },
-    options:{ responsive:true, plugins:{ legend:{ labels:{ boxWidth:12, padding:16 } } }, scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{stepSize:2} } } }
-  });
-
-  const src2026map = {};
-  referrals2026.forEach(r => { src2026map[r.source] = (src2026map[r.source]||0)+1; });
-  new Chart('sourceDonut2026', {
-    type:'doughnut',
-    data:{ labels:Object.keys(src2026map), datasets:[{ data:Object.values(src2026map), backgroundColor:PALETTE, borderColor:C.white, borderWidth:3 }] },
-    options:{ responsive:true, plugins:{ legend:{ position:'right', labels:{ boxWidth:10, padding:14, font:{size:11} } } }, cutout:'62%' }
-  });
-
-  // ── 2025 PRODUCTION ──
-  new Chart('qtrGoalChart', {
-    type:'line',
-    data:{ labels:['Start','Q1','Q2','Q3','Q4'],
-      datasets:[
-        { label:'Goal Pace', data:[0,8750000,17500000,26250000,35000000], borderColor:C.silver, borderDash:[5,4], backgroundColor:'transparent', tension:0.1, pointRadius:4 },
-        { label:'Actual Cumulative', data:[0,4319495,12606860,18619500,23390455], borderColor:C.forest, backgroundColor:'rgba(50,70,42,0.08)', fill:true, tension:0.35, pointRadius:5, borderWidth:2.5 },
-      ]
-    },
-    options:{ responsive:true, plugins:{ legend:{labels:{boxWidth:12,padding:16}} }, scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{ callback:v=>'$'+Math.round(v/1e6)+'M' } } } }
-  });
-
-  new Chart('volumeByQtr', {
-    type:'bar',
-    data:{ labels:['Q1','Q2','Q3','Q4'], datasets:[{ label:'Volume', data:[4319495,8287365,6012640,4770955], backgroundColor:[C.teal,C.forest,C.tan,C.terra], borderRadius:6 }] },
-    options:{ responsive:true, plugins:{ legend:{display:false} }, scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{ callback:v=>'$'+Math.round(v/1e6)+'M' } } } }
-  });
-
-  new Chart('buyerSellerBar', {
-    type:'bar',
-    data:{ labels:['Q1','Q2','Q3','Q4'],
-      datasets:[
-        { label:'Buyer', data:[6,6,3,3], backgroundColor:C.teal+'cc', borderRadius:5 },
-        { label:'Seller', data:[2,8,8,4], backgroundColor:C.tan+'cc', borderRadius:5 },
-      ]
-    },
-    options:{ responsive:true, plugins:{ legend:{labels:{boxWidth:12,padding:16}} }, scales:{ x:{stacked:true,grid:{color:gridLine}}, y:{stacked:true,beginAtZero:true,grid:{color:gridLine}} } }
-  });
-
-  const m2024 = [2605091,2871947,3991755,0,3740000,5471000,2838200,1734000,1297500,1250000,1326000,2230131];
-  new Chart('vol2024Monthly', {
-    type:'bar',
-    data:{ labels:months, datasets:[{ label:'Volume', data:m2024, backgroundColor:C.sage+'bb', borderColor:C.sage, borderWidth:1.5, borderRadius:4 }] },
-    options:{ responsive:true, plugins:{ legend:{display:false} }, scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{ callback:v=>'$'+Math.round(v/1e6)+'M' } } } }
-  });
-
-  // ── 2026 PRODUCTION ──
-  new Chart('agentMonthly2026', {
-    type:'bar',
-    data:{ labels:['Feb','Mar','Apr'],
-      datasets:[
-        { label:'Ashley (AB)', data:[1,2,3], backgroundColor:C.terra+'bb', borderRadius:5 },
-        { label:'Lorin (LM)',  data:[2,4,2], backgroundColor:C.teal+'bb', borderRadius:5 },
-      ]
-    },
-    options:{ responsive:true, plugins:{ legend:{labels:{boxWidth:12,padding:16}} }, scales:{ x:{stacked:true,grid:{color:gridLine}}, y:{stacked:true,beginAtZero:true,grid:{color:gridLine},ticks:{stepSize:1}} } }
-  });
-
-  const mo2026 = { Feb:0, Mar:0, Apr:0 };
-  closings2026.forEach(c => { if(mo2026[c.mo]!==undefined) mo2026[c.mo] += c.price; });
-  new Chart('vol2026Monthly', {
-    type:'bar',
-    data:{ labels:Object.keys(mo2026), datasets:[{ label:'Volume', data:Object.values(mo2026), backgroundColor:[C.sage,C.teal,C.tan], borderRadius:6 }] },
-    options:{ responsive:true, plugins:{ legend:{display:false} }, scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{ callback:v=>'$'+Math.round(v/1e6)+'M' } } } }
-  });
-
-  new Chart('closePriceBar', {
-    type:'bar',
-    data:{ labels:['Under $300K','$300–500K','$500–750K','$750K–$1M','Over $1M'],
-      datasets:[{ label:'# Closings', data:[1,3,5,2,2], backgroundColor:[C.blush,C.sage,C.teal,C.tan,C.forest], borderRadius:6 }]
-    },
-    options:{ responsive:true, plugins:{ legend:{display:false} }, scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{stepSize:1} } } }
-  });
-
-  // ── 2025 vs 2026 COMPARISON ──
-  // Volume comparison: 2025 by quarter vs 2026 monthly annualized
-  new Chart('compareVolumeChart', {
-    type:'bar',
-    data:{
-      labels:['Q1','Q2','Q3','Q4'],
-      datasets:[
-        { label:'2025', data:[4319495,8287365,6012640,4770955], backgroundColor:C.teal+'bb', borderRadius:5 },
-        { label:'2026 (YTD / projected)', data:[2884000,6210451,null,null], backgroundColor:C.tan+'bb', borderRadius:5 },
-      ]
-    },
-    options:{
-      responsive:true,
-      plugins:{ legend:{labels:{boxWidth:12,padding:16}}, tooltip:{ callbacks:{ label: ctx => fmt(ctx.raw||0) } } },
-      scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{ callback:v=>'$'+Math.round(v/1e6)+'M' } } }
+// ---- Referral Trend Chart ----
+new Chart(document.getElementById('referralChart'), {
+  type: 'line',
+  data: {
+    labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+    datasets: [
+      {
+        label: '2024',
+        data: [8,11,10,11,6,10,8,8,6,7,6,7],
+        borderColor: '#a0aec0', backgroundColor: 'transparent',
+        borderWidth: 2, pointRadius: 3
+      },
+      {
+        label: '2025',
+        data: [10,5,9,8,4,4,5,8,6,7,1,2],
+        borderColor: '#ed8936', backgroundColor: 'transparent',
+        borderWidth: 2, pointRadius: 3
+      },
+      {
+        label: '2026 Goal',
+        data: [10,7,11,10,9,6,7,10,10,10,6,4],
+        borderColor: '#3182ce', backgroundColor: 'transparent',
+        borderWidth: 2, borderDash: [5,5], pointRadius: 0
+      },
+      {
+        label: '2026 Actual',
+        data: [11,11,9,5,11,null,null,null,null,null,null,null],
+        borderColor: '#38a169', backgroundColor: 'rgba(56,161,105,0.1)',
+        borderWidth: 2.5, pointRadius: 4, fill: false
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } },
+    scales: {
+      y: { beginAtZero: true, grid: { color: '#f0f0f0' } },
+      x: { grid: { display: false } }
     }
-  });
+  }
+});
 
-  // Monthly referrals comparison
-  new Chart('compareRefChart', {
-    type:'line',
-    data:{ labels:months,
-      datasets:[
-        { label:'2025', data:ref2025, borderColor:C.teal, backgroundColor:'rgba(130,153,135,0.08)', fill:true, tension:0.4, pointRadius:3, borderWidth:2 },
-        { label:'2026 Goal', data:refGoal2026, borderColor:C.tan, borderDash:[5,4], backgroundColor:'transparent', tension:0.4, pointRadius:3 },
-        { label:'2026 Actual', data:[...ref2026actual,...Array(8).fill(null)], borderColor:C.terra, backgroundColor:'transparent', tension:0.4, pointRadius:4, borderWidth:2.5 },
-      ]
+// ---- Volume by Month Chart ----
+new Chart(document.getElementById('volumeChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Feb','Mar','Apr','May'],
+    datasets: [
+      {
+        label: 'AB',
+        data: [1900000, 2925000, 1201900, 3958000],
+        backgroundColor: '#3182ce'
+      },
+      {
+        label: 'LM',
+        data: [1185000, 2567000, 1292500, 295000],
+        backgroundColor: '#38a169'
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: 'bottom', labels: { font: { size: 11 } } },
+      tooltip: {
+        callbacks: {
+          label: ctx => ' $' + (ctx.raw / 1000000).toFixed(2) + 'M'
+        }
+      }
     },
-    options:{ responsive:true, plugins:{ legend:{labels:{boxWidth:12,padding:16}} }, scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{stepSize:2} } } }
-  });
-
-  // Buyer vs Seller sides comparison
-  new Chart('compareSidesChart', {
-    type:'bar',
-    data:{
-      labels:['Buyer Sides','Seller Sides'],
-      datasets:[
-        { label:'2025 Full Year', data:[18,10], backgroundColor:C.teal+'bb', borderRadius:5 },
-        { label:'2026 YTD', data:[7,6], backgroundColor:C.tan+'bb', borderRadius:5 },
-      ]
-    },
-    options:{ responsive:true, plugins:{ legend:{labels:{boxWidth:12,padding:16}} }, scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{stepSize:2} } } }
-  });
-
-  // Avg close price comparison
-  new Chart('compareAvgPriceChart', {
-    type:'line',
-    data:{
-      labels:['Q1 / Jan-Feb','Q2 / Mar','Q3 / Apr','Q4'],
-      datasets:[
-        { label:'2025 Avg by Qtr', data:[836000,836000,836000,836000], borderColor:C.teal, backgroundColor:'rgba(130,153,135,0.08)', fill:true, tension:0.3, pointRadius:4, borderWidth:2 },
-        { label:'2026 Avg by Period', data:[628250,917238,498900,null], borderColor:C.terra, backgroundColor:'transparent', tension:0.3, pointRadius:4, borderWidth:2.5 },
-      ]
-    },
-    options:{
-      responsive:true,
-      plugins:{ legend:{labels:{boxWidth:12,padding:16}}, tooltip:{ callbacks:{ label: ctx => fmt(ctx.raw||0) } } },
-      scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{ callback:v=>'$'+Math.round(v/1e3)+'K' } } }
+    scales: {
+      x: { stacked: true, grid: { display: false } },
+      y: {
+        stacked: true,
+        grid: { color: '#f0f0f0' },
+        ticks: { callback: v => '$' + (v/1000000).toFixed(1) + 'M' }
+      }
     }
-  });
-
-  // ── REFERRALS ──
-  new Chart('sourcePie2025', {
-    type:'doughnut',
-    data:{ labels:src2025.map(s=>s.source), datasets:[{ data:src2025.map(s=>s.val), backgroundColor:PALETTE, borderColor:C.white, borderWidth:3 }] },
-    options:{ responsive:true, plugins:{ legend:{ position:'right', labels:{ boxWidth:10, padding:14, font:{size:11} } } }, cutout:'55%' }
-  });
-
-  // 2026 source donut for referrals tab
-  new Chart('sourceDonut2026Ref', {
-    type:'doughnut',
-    data:{ labels:Object.keys(src2026map), datasets:[{ data:Object.values(src2026map), backgroundColor:PALETTE, borderColor:C.white, borderWidth:3 }] },
-    options:{ responsive:true, plugins:{ legend:{ position:'right', labels:{ boxWidth:10, padding:14, font:{size:11} } } }, cutout:'62%' }
-  });
-
-  new Chart('refMonthlyLine', {
-    type:'line',
-    data:{ labels:months,
-      datasets:[
-        { label:'2024', data:ref2024, borderColor:C.silver, backgroundColor:'transparent', tension:0.4, pointRadius:3 },
-        { label:'2025', data:ref2025, borderColor:C.teal, backgroundColor:'transparent', tension:0.4, pointRadius:3 },
-        { label:'2026 Goal', data:refGoal2026, borderColor:C.tan, borderDash:[5,4], backgroundColor:'transparent', tension:0.4, pointRadius:3 },
-        { label:'2026 Actual', data:[...ref2026actual,...Array(8).fill(null)], borderColor:C.terra, backgroundColor:'transparent', tension:0.4, pointRadius:4, borderWidth:2.5 },
-      ]
-    },
-    options:{ responsive:true, plugins:{ legend:{labels:{boxWidth:12,padding:16}} }, scales:{ ...baseScales, y:{ ...baseScales.y, ticks:{stepSize:2} } } }
-  });
-
-  // ── ACTIVITY ──
-  const callWkly = [29,33,32,24,34,10,16,26,34,21,19,5,33,0,0,12,38,21,25,10,12,30,17,11,21,34,20,23,28,4];
-  const wkLabels = callWkly.map((_,i)=>`W${i+1}`);
-  new Chart('callsChart', {
-    type:'line',
-    data:{ labels:wkLabels,
-      datasets:[
-        { label:'Calls/Texts', data:callWkly, borderColor:C.forest, backgroundColor:'rgba(50,70,42,0.07)', fill:true, tension:0.4, pointRadius:2, borderWidth:2 },
-        { label:'Goal (10/wk)', data:Array(30).fill(10), borderColor:C.tan, borderDash:[4,4], backgroundColor:'transparent', pointRadius:0 },
-      ]
-    },
-    options:{ responsive:true, plugins:{ legend:{labels:{boxWidth:12,padding:14}} }, scales:{ ...baseScales } }
-  });
-
-  const showWkly = [16,8,6,0,11,6,24,2,6,12,1,4,4,10,4,1,1,20,0,10,10,0,9,10,1,3,2,0,0,0];
-  new Chart('showingsChart', {
-    type:'bar',
-    data:{ labels:wkLabels, datasets:[{ label:'Showings', data:showWkly, backgroundColor:C.teal+'99', borderRadius:3 }] },
-    options:{ responsive:true, plugins:{ legend:{display:false} }, scales:{ ...baseScales } }
-  });
-}
-
-// ══════════════════ INIT ══════════════════
-buildClosingsTable();
-buildActivityGrid();
-initCharts();
+  }
+});
 </script>
 </body>
 </html>
